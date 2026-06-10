@@ -3,9 +3,11 @@ version: '3.8'
 services:
   backend:
     build:
-      context: ./backend
+      context: .
       dockerfile: Dockerfile
     container_name: gyan_azure_backend
+    ports:
+      - "2343:8000" # Expose the unified app on host port 2343
     volumes:
       - gyan_db_data:/app/db
     environment:
@@ -14,19 +16,6 @@ services:
       - DATABASE_URL=sqlite:///./db/gyan_azure.db
       - ADMIN_EMAIL=${ADMIN_EMAIL:-admin@gyan.ai}
       - ADMIN_PASSWORD=${ADMIN_PASSWORD:-GyanAdminPassword123!}
-    restart: always
-    # Port 8000 is internal to the docker network.
-    # Frontend/Nginx proxies requests to it, so we don't expose it to the host.
-
-  frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
-    container_name: gyan_azure_frontend
-    ports:
-      - "2343:80" # Exposed on port 2343 on the host as requested
-    depends_on:
-      - backend
     restart: always
 
 volumes:

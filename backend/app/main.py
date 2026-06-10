@@ -108,7 +108,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Import and include routers
+# Import and include routers with /api prefix
 from app.routes.auth import router as auth_router
 from app.routes.azure import router as azure_router
 from app.routes.vms import router as vms_router
@@ -116,13 +116,46 @@ from app.routes.schedules import router as schedules_router
 from app.routes.users import router as users_router
 from app.routes.audit import router as audit_router
 
-app.include_router(auth_router)
-app.include_router(azure_router)
-app.include_router(vms_router)
-app.include_router(schedules_router)
-app.include_router(users_router)
-app.include_router(audit_router)
+app.include_router(auth_router, prefix="/api")
+app.include_router(azure_router, prefix="/api")
+app.include_router(vms_router, prefix="/api")
+app.include_router(schedules_router, prefix="/api")
+app.include_router(users_router, prefix="/api")
+app.include_router(audit_router, prefix="/api")
 
 @app.get("/health")
 def health_check():
     return {"status": "healthy", "service": "Gyan Azure VM Manager"}
+
+# Serve static assets compiled by Vite
+import os
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
+
+static_dir = os.path.normpath(os.path.join(os.path.dirname(__file__), "..", "static"))
+assets_dir = os.path.join(static_dir, "assets")
+
+if os.path.exists(assets_dir):
+    app.mount("/assets", StaticFiles(directory=assets_dir), name="assets")
+
+# Single Page Application (SPA) catch-all route for frontend views
+@app.get("/{catchall:path}")
+def serve_spa(catchall: str):
+    # If request starts with api/, return standard API 404
+    if catchall.startswith("api/") or catchall.startswith("api"):
+        from fastapi import HTTPException
+        raise HTTPException(status_code=404, detail="API endpoint not found")
+        
+    # Check if a static file exists in the static directory (e.g. logo.png)
+    file_path = os.path.join(static_dir, catchall)
+    if catchall and os.path.isfile(file_path):
+        return FileResponse(file_path)
+        
+    # Default fallback to React SPA's index.html
+    index_path = os.path.join(static_dir, "index.html")
+    if os.path.isfile(index_path):
+        return FileResponse(index_path)
+        
+    # If frontend has not been compiled, return placeholder text
+    from fastapi.responses import HTMLResponse
+    return HTMLResponse("<html><body><h1>Gyan Azure VM Manager</h1><p>API is running, but frontend is not yet compiled.</p></body></html>")
