@@ -114,5 +114,6 @@ class VMInfo(BaseModel):
     power_state: str  # "Running", "Stopped (deallocated)", "Starting", "Stopping", "Unknown"
     allowed_actions: List[str] = []  # ["start", "stop", "restart"] based on user grants
     schedule: Optional[str] = None  # e.g., "auto-stop 19:00"
-    uptime: Optional[str] = None    # e.g., "5d 12h"
+    private_ip: Optional[str] = None
+    public_ip: Optional[str] = None
 

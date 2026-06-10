@@ -70,10 +70,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const drawerActionRestart = document.getElementById('drawerActionRestart');
   const drawerActionStop = document.getElementById('drawerActionStop');
   const configStatus = document.getElementById('configStatus');
-  const configRegion = document.getElementById('configRegion');
+  const configPrivateIp = document.getElementById('configPrivateIp');
   const configSize = document.getElementById('configSize');
   const configRg = document.getElementById('configRg');
-  const configUptime = document.getElementById('configUptime');
+  const configPublicIp = document.getElementById('configPublicIp');
   const configSchedule = document.getElementById('configSchedule');
   const drawerActivityList = document.getElementById('drawerActivityList');
   
@@ -243,8 +243,8 @@ document.addEventListener('DOMContentLoaded', () => {
         <td><div class="skeleton-text name"></div><div class="skeleton-text rg"></div></td>
         <td><div class="skeleton-text status"></div></td>
         <td class="col-size"><div class="skeleton-text size"></div></td>
-        <td class="col-region"><div class="skeleton-text region"></div></td>
-        <td class="col-uptime"><div class="skeleton-text uptime"></div></td>
+        <td class="col-private-ip"><div class="skeleton-text private-ip"></div></td>
+        <td class="col-public-ip"><div class="skeleton-text public-ip"></div></td>
         <td class="col-actions"><div class="skeleton-text actions"></div></td>
       </tr>
       <tr class="skeleton-row">
@@ -252,8 +252,8 @@ document.addEventListener('DOMContentLoaded', () => {
         <td><div class="skeleton-text name"></div><div class="skeleton-text rg"></div></td>
         <td><div class="skeleton-text status"></div></td>
         <td class="col-size"><div class="skeleton-text size"></div></td>
-        <td class="col-region"><div class="skeleton-text region"></div></td>
-        <td class="col-uptime"><div class="skeleton-text uptime"></div></td>
+        <td class="col-private-ip"><div class="skeleton-text private-ip"></div></td>
+        <td class="col-public-ip"><div class="skeleton-text public-ip"></div></td>
         <td class="col-actions"><div class="skeleton-text actions"></div></td>
       </tr>
     `;
@@ -379,8 +379,8 @@ document.addEventListener('DOMContentLoaded', () => {
           </div>
         </td>
         <td class="col-size font-mono" style="color: var(--text-2);">${vm.size}</td>
-        <td class="col-region font-mono" style="color: var(--text-2);">${vm.location}</td>
-        <td class="col-uptime font-mono" style="text-align: right; color: var(--text-2);">${vm.uptime || '—'}</td>
+        <td class="col-private-ip font-mono" style="color: var(--text-2);">${vm.private_ip || '-'}</td>
+        <td class="col-public-ip font-mono" style="color: var(--text-2);">${vm.public_ip || '-'}</td>
         <td class="col-actions">
           <div class="actions-cell">
             <button class="action-icon-btn btn-start" ${canStart ? '' : 'disabled'} title="Start VM">
@@ -851,10 +851,10 @@ document.addEventListener('DOMContentLoaded', () => {
     drawerVmRg.textContent = vm.resource_group;
     
     configStatus.textContent = vm.power_state;
-    configRegion.textContent = vm.location;
+    configPrivateIp.textContent = vm.private_ip || '-';
     configSize.textContent = vm.size;
     configRg.textContent = vm.resource_group;
-    configUptime.textContent = vm.uptime || '—';
+    configPublicIp.textContent = vm.public_ip || '-';
     configSchedule.textContent = vm.schedule || '—';
     
     updateDrawerActionButtons(vm);

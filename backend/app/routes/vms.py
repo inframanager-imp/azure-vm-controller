@@ -34,23 +34,6 @@ def check_action_permission(user: User, resource_group: str, vm_name: str, actio
         
     return False
 
-def get_stable_uptime(vm_name: str, power_state: str) -> str:
-    if "running" not in power_state.lower():
-        return "—"
-    uptimes = {
-        "automation-test": "5d 12h",
-        "cwb-app-dev": "3d 1h",
-        "cwb-apps-01": "6d 9h",
-        "gyan-engine-das-2": "11d 7h",
-        "gyan-engine-das-3": "11d 7h",
-        "gyan-engine-demo-1": "1d 18h",
-        "nda-ds-server-v2": "19d 5h",
-        "rapid-gyan-engine-2": "2d 4h",
-        "relevance-benchmarking-01": "8h",
-        "workbench": "34d 2h"
-    }
-    return uptimes.get(vm_name.lower(), "2d 6h")
-
 def get_schedule_time(cron_str: str) -> str:
     parts = cron_str.split()
     if len(parts) >= 2:
@@ -97,7 +80,6 @@ def get_vms(
             time_str = get_schedule_time(sched.cron_expression)
             vm.schedule = f"auto-start {time_str}"
             
-        vm.uptime = get_stable_uptime(vm.name, vm.power_state)
         
     return vms_list
 

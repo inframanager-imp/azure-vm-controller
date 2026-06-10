@@ -23,6 +23,20 @@
       --accent-bg: oklch(0.72 0.085 162 / 0.15);
       --red: oklch(0.66 0.14 25);
     }
+    [data-theme="light"] {
+      --bg: #f4f6f8;
+      --surface: #ffffff;
+      --hover: #e8ebef;
+      --border: #dde1e6;
+      --border-strong: #c8cdd4;
+      --text: #1a1d23;
+      --text-dim: #5a6270;
+      --text-muted: #8a919c;
+      --accent: #1a8a7d;
+      --accent-hover: #15756a;
+      --accent-bg: rgba(26, 138, 125, 0.10);
+      --red: #dc2626;
+    }
     
     * {
       box-sizing: border-box;
@@ -104,7 +118,8 @@
     
     .form-input {
       width: 100%;
-      background-color: oklch(0.15 0.005 248);
+      background-color: var(--hover);
+      border: 1px solid var(--border);
       border: 1px solid var(--border);
       border-radius: 6px;
       padding: 10px 12px;
@@ -175,6 +190,7 @@
       to { transform: rotate(360deg); }
     }
   </style>
+  <script>document.documentElement.setAttribute('data-theme', localStorage.getItem('gyan-theme') || 'dark');</script>
 </head>
 <body>
   <div class="login-container">

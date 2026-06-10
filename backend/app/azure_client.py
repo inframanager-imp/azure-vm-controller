@@ -7,6 +7,7 @@ from cryptography.fernet import Fernet
 from azure.identity import ClientSecretCredential
 from azure.mgmt.compute import ComputeManagementClient
 from azure.mgmt.resource import ResourceManagementClient
+from azure.mgmt.network import NetworkManagementClient
 from sqlalchemy.orm import Session
 
 from app.config import settings
@@ -31,84 +32,108 @@ def populate_mock_vms():
             "resource_group": "gyan-test",
             "location": "eastus",
             "size": "Standard_B2ms",
-            "power_state": "Running"
+            "power_state": "Running",
+            "private_ip": "10.0.1.4",
+            "public_ip": "20.121.45.67"
         },
         "cwb-dev/cwb-app-dev": {
             "name": "cwb-app-dev",
             "resource_group": "cwb-dev",
             "location": "eastus2",
             "size": "Standard_B2s",
-            "power_state": "Running"
+            "power_state": "Running",
+            "private_ip": "10.0.2.5",
+            "public_ip": "52.188.73.22"
         },
         "cwb-demo/cwb-apps-01": {
             "name": "cwb-apps-01",
             "resource_group": "cwb-demo",
             "location": "eastus2",
             "size": "Standard_D2s_v3",
-            "power_state": "Running"
+            "power_state": "Running",
+            "private_ip": "10.0.3.8",
+            "public_ip": "40.117.92.45"
         },
         "cwb-dev/cwb-data-01": {
             "name": "cwb-data-01",
             "resource_group": "cwb-dev",
             "location": "eastus2",
             "size": "Standard_D2s_v3",
-            "power_state": "Stopped (deallocated)"
+            "power_state": "Stopped (deallocated)",
+            "private_ip": "10.0.2.9",
+            "public_ip": None
         },
         "cwb-dev/cwb-mcq-gpu-wks-01": {
             "name": "CWB-MCQ-GPU-WKS-01",
             "resource_group": "cwb-dev",
             "location": "eastus2",
             "size": "Standard_NV12ads_A10_v6",
-            "power_state": "Stopped (deallocated)"
+            "power_state": "Stopped (deallocated)",
+            "private_ip": "10.0.2.14",
+            "public_ip": None
         },
         "gyan-das/gyan-engine-das-2": {
             "name": "gyan-engine-das-2",
             "resource_group": "gyan-das",
             "location": "eastus2",
             "size": "Standard_D8s_v3",
-            "power_state": "Running"
+            "power_state": "Running",
+            "private_ip": "10.1.0.5",
+            "public_ip": "20.85.144.33"
         },
         "gyan-das/gyan-engine-das-3": {
             "name": "gyan-engine-das-3",
             "resource_group": "gyan-das",
             "location": "eastus2",
             "size": "Standard_D8s_v3",
-            "power_state": "Running"
+            "power_state": "Running",
+            "private_ip": "10.1.0.6",
+            "public_ip": "20.85.144.38"
         },
         "gyan-demo/gyan-engine-demo-1": {
             "name": "gyan-engine-demo-1",
             "resource_group": "gyan-demo",
             "location": "eastus2",
             "size": "Standard_D8s_v3",
-            "power_state": "Running"
+            "power_state": "Running",
+            "private_ip": "10.2.0.4",
+            "public_ip": "52.224.88.19"
         },
         "gyan-legal/nda-ds-server-v2": {
             "name": "nda-ds-server-v2",
             "resource_group": "gyan-legal",
             "location": "eastus2",
             "size": "Standard_B2s",
-            "power_state": "Running"
+            "power_state": "Running",
+            "private_ip": "10.3.0.7",
+            "public_ip": "40.88.12.55"
         },
         "gyan-collection-ingestion/rapid-gyan-engine-2": {
             "name": "rapid-gyan-engine-2",
             "resource_group": "gyan-collection-ingestion",
             "location": "eastus2",
             "size": "Standard_D8s_v3",
-            "power_state": "Running"
+            "power_state": "Running",
+            "private_ip": "10.4.0.4",
+            "public_ip": "20.94.67.81"
         },
         "gyan-benchmarking/relevance-benchmarking-01": {
             "name": "relevance-benchmarking-01",
             "resource_group": "gyan-benchmarking",
             "location": "eastus2",
             "size": "Standard_D8s_v3",
-            "power_state": "Running"
+            "power_state": "Running",
+            "private_ip": "10.5.0.4",
+            "public_ip": "52.190.33.44"
         },
         "cwb-prod/workbench": {
             "name": "workbench",
             "resource_group": "cwb-prod",
             "location": "eastus2",
             "size": "Standard_D8s_v3",
-            "power_state": "Running"
+            "power_state": "Running",
+            "private_ip": "10.6.0.4",
+            "public_ip": "40.121.77.92"
         }
     }
     VM_CACHE.update(mock_data)
@@ -224,13 +249,36 @@ def refresh_vm_cache(db: Session) -> bool:
             size = getattr(vm, "hardware_profile", None)
             size_str = size.vm_size if size else "Unknown"
             
+            # Fetch IPs
+            private_ip = None
+            public_ip = None
+            try:
+                network_client = NetworkManagementClient(*get_azure_credentials(db))
+                if vm.network_profile and vm.network_profile.network_interfaces:
+                    for nic_ref in vm.network_profile.network_interfaces:
+                        nic_name = nic_ref.id.split('/')[-1]
+                        nic = network_client.network_interfaces.get(rg, nic_name)
+                        for ip_config in nic.ip_configurations:
+                            if ip_config.private_ip_address:
+                                private_ip = ip_config.private_ip_address
+                            if ip_config.public_ip_address and ip_config.public_ip_address.id:
+                                pub_name = ip_config.public_ip_address.id.split('/')[-1]
+                                pub_ip = network_client.public_ip_addresses.get(rg, pub_name)
+                                if pub_ip.ip_address:
+                                    public_ip = pub_ip.ip_address
+                        break  # just use the first NIC
+            except Exception as e:
+                logger.error(f"Error fetching IPs for {rg}/{vm.name}: {str(e)}")
+
             key = f"{rg}/{vm.name}".lower()
             new_cache[key] = {
                 "name": vm.name,
                 "resource_group": rg,
                 "location": vm.location,
                 "size": size_str,
-                "power_state": power_state
+                "power_state": power_state,
+                "private_ip": private_ip,
+                "public_ip": public_ip
             }
 
         # Run status fetches in parallel using ThreadPoolExecutor
@@ -306,7 +354,9 @@ def list_allowed_vms(user_role: str, user_grants: List[VMGrant]) -> List[VMInfo]
                 location=cached_vm["location"],
                 size=cached_vm["size"],
                 power_state=cached_vm["power_state"],
-                allowed_actions=allowed_actions
+                allowed_actions=allowed_actions,
+                private_ip=cached_vm.get("private_ip"),
+                public_ip=cached_vm.get("public_ip")
             ))
             
     return allowed_vms

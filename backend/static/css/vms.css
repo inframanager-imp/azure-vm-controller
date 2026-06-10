@@ -20,6 +20,29 @@
   --shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
 }
 
+/* ── Light Theme — Dark Teal Sidebar + White Content ── */
+[data-theme="light"] {
+  --bg: #f4f6f8;
+  --sidebar: #1b3a4b;
+  --surface: #ffffff;
+  --surface-2: #edf0f3;
+  --hover: #e8ebef;
+  --border: #dde1e6;
+  --border-strong: #c8cdd4;
+  --text: #1a1d23;
+  --text-2: #3d444e;
+  --text-3: #5a6270;
+  --text-4: #8a919c;
+  --accent: #1a8a7d;
+  --accent-bd: rgba(26, 138, 125, 0.18);
+  --run: #16a34a;
+  --stop: #8a919c;
+  --amber: #d97706;
+  --red: #dc2626;
+  --blue: #1a8a7d;
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
 /* Base resets */
 * {
   box-sizing: border-box;
@@ -595,7 +618,7 @@ input[type="checkbox"].custom-checkbox:indeterminate::before {
 }
 
 .data-table th {
-  background-color: oklch(0.19 0.005 248);
+  background-color: var(--surface-2);
   font-size: 11px;
   font-weight: 600;
   color: var(--text-3);
@@ -720,7 +743,16 @@ input[type="checkbox"].custom-checkbox:indeterminate::before {
 .action-icon-btn:hover:not(:disabled) {
   background-color: var(--surface-2);
   border-color: var(--border);
-  color: var(--text-2);
+}
+
+.action-icon-btn.btn-start {
+  color: #4dd0c4; /* Teal/green */
+}
+.action-icon-btn.btn-restart {
+  color: #4dd0c4;
+}
+.action-icon-btn.btn-stop {
+  color: #f87171; /* Red for dark mode */
 }
 
 .action-icon-btn:disabled {
@@ -789,7 +821,8 @@ input[type="checkbox"].custom-checkbox:indeterminate::before {
 .skeleton-text.status { width: 90px; }
 .skeleton-text.size { width: 100px; }
 .skeleton-text.region { width: 70px; }
-.skeleton-text.uptime { width: 60px; margin-left: auto; }
+.skeleton-text.private-ip { width: 80px; }
+.skeleton-text.public-ip { width: 90px; }
 .skeleton-text.checkbox { width: 15px; height: 15px; border-radius: 4px; margin: 0 auto; }
 .skeleton-text.actions { width: 150px; height: 22px; border-radius: 5px; margin-left: auto; }
 
@@ -1274,7 +1307,7 @@ select:focus-visible {
   }
   
   /* Hide table size and region columns */
-  .col-size, .col-region {
+  .col-size, .col-private-ip, .col-public-ip {
     display: none;
   }
   
@@ -1314,4 +1347,215 @@ select:focus-visible {
   .drawer {
     width: 100%;
   }
+}
+
+/* ── Theme Toggle Button ── */
+.theme-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px 10px;
+  width: 100%;
+  background-color: transparent;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  color: var(--text-2);
+  font-family: inherit;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background 0.12s, border-color 0.12s, color 0.12s;
+}
+.theme-toggle:hover {
+  background: var(--hover);
+  border-color: var(--border-strong);
+  color: var(--text);
+}
+.theme-toggle svg {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+/* Hide the correct icon based on theme */
+.theme-toggle .icon-sun  { display: none; }
+.theme-toggle .icon-moon { display: inline; }
+[data-theme="light"] .theme-toggle .icon-sun  { display: inline; }
+[data-theme="light"] .theme-toggle .icon-moon { display: none; }
+
+/* ── Light Theme Overrides ── */
+[data-theme="light"] .dropdown-menu {
+  background: #ffffff;
+  border-color: #dde1e6;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+}
+[data-theme="light"] .dropdown-item:hover {
+  background: #edf0f3;
+}
+[data-theme="light"] select option {
+  background: #ffffff;
+  color: #1a1d23;
+}
+[data-theme="light"] .modal-overlay {
+  background: rgba(0, 0, 0, 0.25);
+}
+[data-theme="light"] .modal {
+  background: #ffffff;
+  border-color: #dde1e6;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.10);
+}
+[data-theme="light"] .toast {
+  background: #ffffff;
+  border-color: #dde1e6;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+}
+[data-theme="light"] ::-webkit-scrollbar-track {
+  background: #edf0f3;
+}
+[data-theme="light"] ::-webkit-scrollbar-thumb {
+  background: #c8cdd4;
+}
+[data-theme="light"] ::-webkit-scrollbar-thumb:hover {
+  background: #a8aeb8;
+}
+[data-theme="light"] .skeleton-text {
+  background: linear-gradient(90deg, #e8ebef 25%, #f4f6f8 50%, #e8ebef 75%);
+  background-size: 200% 100%;
+}
+
+/* ── Dark Teal Sidebar in light mode ── */
+[data-theme="light"] .sidebar {
+  background-color: #1b3a4b;
+  border-right: none;
+}
+[data-theme="light"] .brand-name {
+  color: #ffffff;
+}
+[data-theme="light"] .brand-icon {
+  border-color: #4dd0c4;
+}
+[data-theme="light"] .brand-icon::after {
+  background-color: #4dd0c4;
+}
+[data-theme="light"] .menu-group-title {
+  color: rgba(255, 255, 255, 0.45);
+}
+[data-theme="light"] .menu-item {
+  color: rgba(255, 255, 255, 0.72);
+}
+[data-theme="light"] .menu-item svg {
+  stroke: rgba(255, 255, 255, 0.55);
+}
+[data-theme="light"] .menu-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+}
+[data-theme="light"] .menu-item:hover svg {
+  stroke: rgba(255, 255, 255, 0.8);
+}
+[data-theme="light"] .menu-item.active {
+  background: rgba(255, 255, 255, 0.12) !important;
+  color: #ffffff !important;
+  border-left: 3px solid #4dd0c4;
+  padding-left: 7px;
+}
+[data-theme="light"] .menu-item.active svg {
+  stroke: #4dd0c4;
+}
+/* Sidebar footer — dark bg needs light text */
+[data-theme="light"] .sidebar-footer {
+  border-top-color: rgba(255, 255, 255, 0.10);
+}
+[data-theme="light"] .user-avatar {
+  background-color: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.20);
+  color: rgba(255, 255, 255, 0.8);
+}
+[data-theme="light"] .user-name {
+  color: #ffffff;
+}
+[data-theme="light"] .user-role {
+  color: rgba(255, 255, 255, 0.50);
+}
+[data-theme="light"] .btn-signout {
+  color: rgba(255, 255, 255, 0.60);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+[data-theme="light"] .btn-signout:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.22);
+}
+[data-theme="light"] .theme-toggle {
+  color: rgba(255, 255, 255, 0.60);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+[data-theme="light"] .theme-toggle:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.22);
+}
+
+/* ── Table header — dark teal ── */
+[data-theme="light"] .data-table th {
+  background: #1b3a4b;
+  color: rgba(255, 255, 255, 0.85);
+  border-bottom-color: #153040;
+}
+[data-theme="light"] .data-table th.sortable:hover {
+  color: #ffffff;
+}
+/* Action buttons colored in light mode */
+[data-theme="light"] .action-icon-btn.btn-start {
+  color: #1a8a7d;
+}
+[data-theme="light"] .action-icon-btn.btn-start:hover:not(:disabled) {
+  background: rgba(26, 138, 125, 0.08);
+  border-color: rgba(26, 138, 125, 0.25);
+  color: #15756a;
+}
+[data-theme="light"] .action-icon-btn.btn-restart {
+  color: #1a8a7d;
+}
+[data-theme="light"] .action-icon-btn.btn-restart:hover:not(:disabled) {
+  background: rgba(26, 138, 125, 0.08);
+  border-color: rgba(26, 138, 125, 0.25);
+  color: #15756a;
+}
+[data-theme="light"] .action-icon-btn.btn-stop {
+  color: #dc2626;
+}
+[data-theme="light"] .action-icon-btn.btn-stop:hover:not(:disabled) {
+  background: rgba(220, 38, 38, 0.06);
+  border-color: rgba(220, 38, 38, 0.20);
+  color: #dc2626;
+}
+/* Sync Azure button */
+[data-theme="light"] .btn-sync {
+  background: #ffffff;
+  border-color: #1a8a7d;
+  color: #1a8a7d;
+}
+[data-theme="light"] .btn-sync:hover {
+  background: rgba(26, 138, 125, 0.06);
+}
+/* Button ghost in content area */
+[data-theme="light"] .btn-ghost {
+  border-color: #c8cdd4;
+  color: #3d444e;
+}
+[data-theme="light"] .btn-ghost:hover {
+  background: #edf0f3;
+  border-color: #a8aeb8;
+}
+/* Checkbox on dark header */
+[data-theme="light"] .data-table thead .custom-checkbox {
+  border-color: rgba(255, 255, 255, 0.40);
+  background-color: rgba(255, 255, 255, 0.10);
+}
+[data-theme="light"] .data-table thead .custom-checkbox:hover {
+  border-color: rgba(255, 255, 255, 0.65);
+}
+/* Sort indicator on dark header */
+[data-theme="light"] .sort-indicator {
+  color: rgba(255, 255, 255, 0.50);
 }
