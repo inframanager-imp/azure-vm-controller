@@ -1,0 +1,230 @@
+import datetime
+from typing import List
+from fastapi import APIRouter, Depends, HTTPException, status
+from sqlalchemy.orm import Session
+
+from app.database import get_db
+from app.auth import get_current_user
+from app.models import User, AuditLog
+from app.schemas import VMInfo
+from app.azure_client import (
+    list_allowed_vms, execute_vm_action, check_user_grant, VM_CACHE, refresh_vm_cache
+)
+
+router = APIRouter(prefix="/vms", tags=["Virtual Machines"])
+
+def check_action_permission(user: User, resource_group: str, vm_name: str, action: str) -> bool:
+    """
+    Checks if the user has permission to execute the given action on a specific VM.
+    Admins bypass check. Standard users must match an active VMGrant allowing the action.
+    """
+    if user.role == "admin":
+        return True
+        
+    permissions = check_user_grant(user.role, user.grants, resource_group, vm_name)
+    if not permissions:
+        return False
+        
+    if action == "start":
+        return permissions["can_start"]
+    elif action == "stop":
+        return permissions["can_stop"]
+    elif action == "restart":
+        return permissions["can_restart"]
+        
+    return False
+
+@router.get("", response_model=List[VMInfo])
+def get_vms(
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """
+    Retrieves all virtual machines the caller is authorized to view.
+    Reads from the background VM status cache to prevent ARM rate-limiting.
+    """
+    return list_allowed_vms(current_user.role, current_user.grants)
+
+@router.post("/refresh")
+def force_refresh_cache(
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """
+    Manual cache refresh trigger. Useful if user wants immediate full reload.
+    """
+    success = refresh_vm_cache(db)
+    if success:
+        return {"status": "success", "message": "VM Cache refreshed successfully."}
+    else:
+        return {"status": "skipped", "message": "VM Cache is already refreshing or failed to load settings."}
+
+@router.get("/resource-groups", response_model=List[str])
+def get_resource_groups(
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """
+    Returns unique resource groups from cached VMs that the user has permission to see.
+    """
+    # Extract unique RGs from cached VMs
+    rgs = set()
+    for cached_vm in VM_CACHE.values():
+        rg = cached_vm["resource_group"]
+        name = cached_vm["name"]
+        
+        # Admin gets everything, user needs at least list access to VM/RG
+        if check_user_grant(current_user.role, current_user.grants, rg, name):
+            rgs.add(rg)
+            
+    return sorted(list(rgs))
+
+@router.post("/{rg}/{name}/start")
+def start_virtual_machine(
+    rg: str,
+    name: str,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """
+    Starts an Azure Virtual Machine. Enforces user permission.
+    """
+    if not check_action_permission(current_user, rg, name, "start"):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail=f"You do not have permission to start VM {name} in Resource Group {rg}."
+        )
+        
+    try:
+        final_state = execute_vm_action(
+            db=db,
+            resource_group=rg,
+            vm_name=name,
+            action="start",
+            username=current_user.username
+        )
+        # Log audit entry
+        audit_log = AuditLog(
+            username=current_user.username,
+            vm_name=name,
+            action="start",
+            result="success",
+            timestamp=datetime.datetime.utcnow()
+        )
+        db.add(audit_log)
+        db.commit()
+        return {"status": "success", "power_state": final_state}
+    except Exception as e:
+        audit_log = AuditLog(
+            username=current_user.username,
+            vm_name=name,
+            action="start",
+            result=f"failed: {str(e)}",
+            timestamp=datetime.datetime.utcnow()
+        )
+        db.add(audit_log)
+        db.commit()
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to start VM: {str(e)}"
+        )
+
+@router.post("/{rg}/{name}/stop")
+def stop_virtual_machine(
+    rg: str,
+    name: str,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """
+    Stops (deallocates) an Azure Virtual Machine. Enforces user permission.
+    """
+    if not check_action_permission(current_user, rg, name, "stop"):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail=f"You do not have permission to stop VM {name} in Resource Group {rg}."
+        )
+        
+    try:
+        final_state = execute_vm_action(
+            db=db,
+            resource_group=rg,
+            vm_name=name,
+            action="stop",
+            username=current_user.username
+        )
+        # Log audit entry
+        audit_log = AuditLog(
+            username=current_user.username,
+            vm_name=name,
+            action="stop (deallocate)",
+            result="success",
+            timestamp=datetime.datetime.utcnow()
+        )
+        db.add(audit_log)
+        db.commit()
+        return {"status": "success", "power_state": final_state}
+    except Exception as e:
+        audit_log = AuditLog(
+            username=current_user.username,
+            vm_name=name,
+            action="stop (deallocate)",
+            result=f"failed: {str(e)}",
+            timestamp=datetime.datetime.utcnow()
+        )
+        db.add(audit_log)
+        db.commit()
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to stop VM: {str(e)}"
+        )
+
+@router.post("/{rg}/{name}/restart")
+def restart_virtual_machine(
+    rg: str,
+    name: str,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """
+    Restarts an Azure Virtual Machine. Enforces user permission.
+    """
+    if not check_action_permission(current_user, rg, name, "restart"):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail=f"You do not have permission to restart VM {name} in Resource Group {rg}."
+        )
+        
+    try:
+        final_state = execute_vm_action(
+            db=db,
+            resource_group=rg,
+            vm_name=name,
+            action="restart",
+            username=current_user.username
+        )
+        # Log audit entry
+        audit_log = AuditLog(
+            username=current_user.username,
+            vm_name=name,
+            action="restart",
+            result="success",
+            timestamp=datetime.datetime.utcnow()
+        )
+        db.add(audit_log)
+        db.commit()
+        return {"status": "success", "power_state": final_state}
+    except Exception as e:
+        audit_log = AuditLog(
+            username=current_user.username,
+            vm_name=name,
+            action="restart",
+            result=f"failed: {str(e)}",
+            timestamp=datetime.datetime.utcnow()
+        )
+        db.add(audit_log)
+        db.commit()
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to restart VM: {str(e)}"
+        )

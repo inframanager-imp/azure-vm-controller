@@ -1,0 +1,73 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    background-color: #0F172A; /* Solid Slate-900 */
+    color: #F1F5F9;
+  }
+}
+
+@layer utilities {
+  /* Replace glassmorphism with standard solid card styling */
+  .glass-panel {
+    background-color: #1E293B; /* Solid Slate-800 */
+    border: 1px solid #334155;    /* Slate-700 */
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  }
+  
+  .glass-panel-light {
+    background-color: #0F172A; /* Solid Slate-900 */
+    border: 1px solid #1E293B;    /* Slate-800 */
+  }
+  
+  .glass-panel-hover {
+    transition: all 0.15s ease-in-out;
+  }
+  
+  .glass-panel-hover:hover {
+    border-color: #14B8A6; /* Gyan Teal Accent border */
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2), 0 4px 6px -4px rgba(0, 0, 0, 0.2);
+  }
+  
+  .glass-input {
+    background-color: #0F172A; /* Slate-900 background */
+    border: 1px solid #334155;    /* Slate-700 */
+    color: #F1F5F9;
+    transition: all 0.15s ease-in-out;
+  }
+  
+  .glass-input:focus {
+    border-color: #14B8A6; /* Teal border */
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(20, 184, 166, 0.2);
+  }
+
+  .text-glow-teal {
+    text-shadow: none;
+  }
+  
+  .text-glow-green {
+    text-shadow: none;
+  }
+}
+
+/* Standard scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0F172A;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #334155;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #475569;
+}

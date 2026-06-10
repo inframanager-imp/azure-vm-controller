@@ -1,0 +1,44 @@
+# Node dependencies
+**/node_modules/
+
+# Local configuration / environment variables
+.env
+backend/.env
+
+# Local Databases (SQLite)
+backend/db/
+*.db
+*.db-journal
+*.db-wal
+
+# Build outputs
+**/dist/
+**/build/
+
+# IDE files
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
+
+# OS files
+Thumbs.db
+.DS_Store
+
+# Python files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv/
+pip-log.txt
+.tox/
+.coverage
+.cache
+.hypothesis/
