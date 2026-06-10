@@ -3,10 +3,6 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
-# Install system dependencies if any are needed (e.g. for build tools if required by dependencies)
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    build-essential \
-    && rm -rf /var/lib/apt/lists/*
 
 # Copy and install Python dependencies
 COPY requirements.txt .
