@@ -10,7 +10,6 @@ import {
   User as UserIcon 
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
-import logo from '../assets/logo.png';
 
 const Sidebar = () => {
   const { user, logout, isAdmin } = useAuth();
@@ -30,16 +29,13 @@ const Sidebar = () => {
   ];
 
   return (
-    <aside className="w-64 glass-panel border-r border-white/5 h-screen sticky top-0 flex flex-col justify-between">
+    <aside className="w-64 bg-[#0b0c12] border-r border-[#1c1e2d] h-screen sticky top-0 flex flex-col justify-between">
       {/* Top Section */}
       <div className="flex flex-col flex-1 py-6">
         {/* Logo and Brand */}
         <div className="px-6 mb-8 flex flex-col">
-          <div className="flex items-center space-x-3">
-            <img src={logo} alt="Gyan Logo" className="h-10 w-auto object-contain" />
-          </div>
-          <span className="text-[10px] uppercase tracking-[0.2em] text-[#14B8A6] mt-2 font-medium ml-1">
-            AI You Can Trust
+          <span className="text-xl font-bold font-sans text-white tracking-wide">
+            GYAN
           </span>
         </div>
 
@@ -54,8 +50,8 @@ const Sidebar = () => {
                 className={({ isActive }) => `
                   flex items-center px-4 py-3 text-sm font-medium rounded-xl transition-all duration-150 group
                   ${isActive 
-                    ? 'bg-gradient-to-r from-teal-500/10 to-emerald-500/5 text-[#14B8A6] border-l-2 border-[#14B8A6]' 
-                    : 'text-slate-400 hover:bg-white/5 hover:text-slate-100'}
+                    ? 'bg-[#14B8A6]/10 text-[#14B8A6] border-l-2 border-[#14B8A6]' 
+                    : 'text-slate-400 hover:bg-[#161824]/50 hover:text-slate-100'}
                 `}
               >
                 <item.icon className="mr-3 h-5 w-5 flex-shrink-0 transition-colors" />
@@ -67,7 +63,7 @@ const Sidebar = () => {
       </div>
 
       {/* Bottom User Profile Section */}
-      <div className="p-4 border-t border-white/5 bg-slate-950/20">
+      <div className="p-4 border-t border-[#1c1e2d] bg-[#07080c]/30">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center space-x-3 min-w-0">
             <div className="h-9 w-9 rounded-lg bg-teal-500/10 border border-teal-500/20 flex items-center justify-center text-teal-400">

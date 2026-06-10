@@ -200,7 +200,7 @@ const Schedules = () => {
   return (
     <div className="space-y-8">
       {/* Page Header Actions */}
-      <div className="flex justify-between items-center bg-slate-900/20 border border-white/5 p-4 rounded-2xl backdrop-blur-md">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-[#11131e]/50 border border-[#1c1e2d] p-4 rounded-2xl">
         <div className="flex items-center space-x-2 text-slate-400 text-xs">
           <Info className="h-4 w-4 text-teal-400" />
           <span>Schedules operate automatically using background workers. Timezones are respected.</span>
@@ -208,7 +208,7 @@ const Schedules = () => {
         
         <button
           onClick={() => openModal()}
-          className="flex items-center space-x-2 px-4 py-2 rounded-xl bg-gradient-to-r from-teal-500 to-emerald-500 text-white font-semibold text-sm transition-all duration-200 hover:opacity-90 active:scale-[0.98] shadow-lg shadow-teal-500/20"
+          className="flex items-center space-x-2 px-4 py-2 rounded-xl btn-primary text-sm transition-all duration-150"
         >
           <Plus className="h-4 w-4" />
           <span>Create Schedule</span>
@@ -223,7 +223,7 @@ const Schedules = () => {
         </div>
       ) : schedules.length === 0 ? (
         <GlassCard className="flex flex-col items-center justify-center py-16 text-center">
-          <div className="h-12 w-12 rounded-full bg-slate-800/40 border border-white/5 flex items-center justify-center text-slate-500 mb-4">
+          <div className="h-12 w-12 rounded-full bg-[#07080c]/50 border border-[#1c1e2d] flex items-center justify-center text-slate-500 mb-4">
             <Calendar className="h-6 w-6" />
           </div>
           <h3 className="text-lg font-bold text-white">No Schedules Configured</h3>
@@ -238,7 +238,7 @@ const Schedules = () => {
             const isStart = schedule.action === 'start';
             
             return (
-              <GlassCard key={schedule.id} className={`border border-white/5 flex flex-col justify-between ${!schedule.is_enabled ? 'opacity-60' : ''}`} hover>
+              <GlassCard key={schedule.id} className={`border border-[#1c1e2d] flex flex-col justify-between ${!schedule.is_enabled ? 'opacity-60' : ''}`} hover>
                 {/* Header details */}
                 <div className="flex justify-between items-start mb-4">
                   <div>
@@ -259,7 +259,7 @@ const Schedules = () => {
                   <button
                     onClick={() => handleToggle(schedule)}
                     className={`h-6 w-11 rounded-full p-0.5 transition-colors duration-200 focus:outline-none ${
-                      schedule.is_enabled ? 'bg-teal-500' : 'bg-slate-800'
+                      schedule.is_enabled ? 'bg-teal-500' : 'bg-[#1c1e2d]'
                     }`}
                   >
                     <div className={`bg-white h-5 w-5 rounded-full shadow-md transform duration-200 ${
@@ -269,7 +269,7 @@ const Schedules = () => {
                 </div>
 
                 {/* Cron & Next Runs */}
-                <div className="bg-slate-950/40 border border-white/5 p-4 rounded-xl space-y-3 mb-4 text-xs">
+                <div className="bg-[#07080c]/40 border border-[#1c1e2d] p-4 rounded-xl space-y-3 mb-4 text-xs">
                   <div className="flex justify-between text-slate-400">
                     <span>Cron Expression:</span>
                     <span className="font-semibold text-slate-200">{schedule.cron_expression} ({schedule.timezone})</span>
@@ -289,19 +289,19 @@ const Schedules = () => {
                 </div>
 
                 {/* Controls Footer */}
-                <div className="flex justify-between items-center text-xs text-slate-500 border-t border-white/5 pt-4">
+                <div className="flex justify-between items-center text-xs text-slate-500 border-t border-[#1c1e2d] pt-4">
                   <span>Created by: <strong className="text-slate-400">{schedule.created_by}</strong></span>
                   
                   <div className="flex space-x-2">
                     <button
                       onClick={() => openModal(schedule)}
-                      className="px-3 py-1.5 rounded-lg bg-slate-800/40 hover:bg-slate-800 text-slate-300 border border-white/5 transition-colors duration-150 font-medium"
+                      className="px-3 py-1.5 rounded-lg btn-secondary text-xs transition-colors duration-150"
                     >
                       Edit
                     </button>
                     <button
                       onClick={() => handleDelete(schedule.id)}
-                      className="p-1.5 rounded-lg bg-red-950/10 hover:bg-red-950/20 text-red-400 border border-red-950/30 transition-colors duration-150"
+                      className="p-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 transition-all duration-150"
                       title="Delete Schedule"
                     >
                       <Trash2 className="h-4 w-4" />
@@ -318,7 +318,7 @@ const Schedules = () => {
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
           <div className="w-full max-w-lg animate-in fade-in zoom-in-95 duration-200">
-            <GlassCard className="border border-white/10 shadow-2xl overflow-y-auto max-h-[90vh]">
+            <GlassCard className="border border-[#1c1e2d] shadow-2xl overflow-y-auto max-h-[90vh]">
               <h3 className="text-xl font-bold font-sans text-white mb-6">
                 {editingSchedule ? 'Edit Schedule Settings' : 'Create New Schedule'}
               </h3>
@@ -358,7 +358,7 @@ const Schedules = () => {
                           vm_name: type === 'vm' ? defaultVm : ''
                         }));
                       }}
-                      className="w-full px-4 py-2.5 text-sm rounded-xl text-slate-300 glass-input appearance-none bg-slate-950"
+                      className="w-full px-4 py-2.5 text-sm rounded-xl text-slate-300 glass-input appearance-none bg-[#07080c]"
                     >
                       <option value="vm">Single VM</option>
                       <option value="rg">Whole Resource Group</option>
@@ -373,7 +373,7 @@ const Schedules = () => {
                     <select
                       value={formData.action}
                       onChange={(e) => setFormData(prev => ({ ...prev, action: e.target.value }))}
-                      className="w-full px-4 py-2.5 text-sm rounded-xl text-slate-300 glass-input appearance-none bg-slate-950"
+                      className="w-full px-4 py-2.5 text-sm rounded-xl text-slate-300 glass-input appearance-none bg-[#07080c]"
                     >
                       <option value="start">Start VM(s)</option>
                       <option value="stop">Stop (Deallocate) VM(s)</option>
@@ -399,7 +399,7 @@ const Schedules = () => {
                           vm_name: formData.target_type === 'vm' ? defaultVm : ''
                         }));
                       }}
-                      className="w-full px-4 py-2.5 text-sm rounded-xl text-slate-300 glass-input appearance-none bg-slate-950"
+                      className="w-full px-4 py-2.5 text-sm rounded-xl text-slate-300 glass-input appearance-none bg-[#07080c]"
                       required
                     >
                       {rgs.length === 0 && <option value="">No RGs Available</option>}
@@ -418,7 +418,7 @@ const Schedules = () => {
                       <select
                         value={formData.vm_name}
                         onChange={(e) => setFormData(prev => ({ ...prev, vm_name: e.target.value }))}
-                        className="w-full px-4 py-2.5 text-sm rounded-xl text-slate-300 glass-input appearance-none bg-slate-950"
+                        className="w-full px-4 py-2.5 text-sm rounded-xl text-slate-300 glass-input appearance-none bg-[#07080c]"
                         required={formData.target_type === 'vm'}
                       >
                         {filteredVmsForSelect.length === 0 && <option value="">No VMs in this RG</option>}
@@ -438,7 +438,7 @@ const Schedules = () => {
                   <select
                     value={presetIndex}
                     onChange={(e) => handlePresetChange(parseInt(e.target.value))}
-                    className="w-full px-4 py-2.5 text-sm rounded-xl text-slate-300 glass-input appearance-none bg-slate-950"
+                    className="w-full px-4 py-2.5 text-sm rounded-xl text-slate-300 glass-input appearance-none bg-[#07080c]"
                   >
                     {PRESETS.map((p, idx) => (
                       <option key={idx} value={idx}>{p.name}</option>
@@ -477,7 +477,7 @@ const Schedules = () => {
                         setFormData(prev => ({ ...prev, timezone: e.target.value }));
                         setPresetIndex(0); // Mark as custom
                       }}
-                      className="w-full px-4 py-2.5 text-sm rounded-xl text-slate-300 glass-input appearance-none bg-slate-950"
+                      className="w-full px-4 py-2.5 text-sm rounded-xl text-slate-300 glass-input appearance-none bg-[#07080c]"
                     >
                       {TIMEZONES.map(tz => (
                         <option key={tz} value={tz}>{tz}</option>
@@ -487,7 +487,7 @@ const Schedules = () => {
                 </div>
 
                 {/* Help text for cron */}
-                <div className="text-[10px] text-slate-500 bg-slate-950/20 border border-white/5 p-3 rounded-xl flex items-start space-x-2">
+                <div className="text-[10px] text-slate-500 bg-[#07080c]/40 border border-[#1c1e2d] p-3 rounded-xl flex items-start space-x-2">
                   <HelpCircle className="h-4 w-4 text-slate-400 flex-shrink-0 mt-0.5" />
                   <div>
                     <strong className="text-slate-400">Cron syntax support:</strong> standard 5-field crontabs (minute, hour, day of month, month, day of week). For example, <code className="text-teal-400 font-semibold">0 20 * * 1-5</code> triggers weekdays at 8:00 PM.
@@ -495,18 +495,18 @@ const Schedules = () => {
                 </div>
 
                 {/* Submit button footer */}
-                <div className="flex justify-end space-x-3 border-t border-white/5 pt-4">
+                <div className="flex justify-end space-x-3 border-t border-[#1c1e2d] pt-4">
                   <button
                     type="button"
                     onClick={closeModal}
-                    className="px-4 py-2 text-sm font-medium rounded-lg bg-slate-800/60 hover:bg-slate-800 text-slate-300 border border-white/5 transition-all duration-150"
+                    className="px-4 py-2 text-sm font-medium rounded-lg btn-secondary transition-all duration-150"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
                     disabled={formLoading}
-                    className="flex items-center space-x-2 px-5 py-2 rounded-lg bg-gradient-to-r from-teal-500 to-emerald-500 text-white font-semibold text-sm transition-all duration-200 hover:opacity-90 active:scale-[0.98] disabled:opacity-50"
+                    className="flex items-center space-x-2 px-5 py-2 rounded-lg btn-primary text-sm transition-all duration-150 disabled:opacity-50"
                   >
                     {formLoading && <Loader2 className="h-4 w-4 animate-spin" />}
                     <span>{editingSchedule ? 'Save Changes' : 'Create Schedule'}</span>

@@ -142,8 +142,8 @@ const Settings = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           
           {/* Settings Fields Card */}
-          <GlassCard className="md:col-span-2 border border-white/5 space-y-6">
-            <h3 className="text-lg font-bold font-sans text-white border-b border-white/5 pb-3">
+          <GlassCard className="md:col-span-2 border border-[#1c1e2d] space-y-6">
+            <h3 className="text-lg font-bold font-sans text-white border-b border-[#1c1e2d] pb-3">
               Service Principal Credentials
             </h3>
 
@@ -208,12 +208,11 @@ const Settings = () => {
                 />
               </div>
 
-              {/* Save Trigger */}
               <div className="flex justify-end pt-4">
                 <button
                   type="submit"
                   disabled={saveLoading}
-                  className="flex items-center space-x-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-teal-500 to-emerald-500 text-white font-semibold text-sm transition-all duration-250 hover:opacity-90 active:scale-95 disabled:opacity-50"
+                  className="flex items-center space-x-2 px-5 py-2.5 rounded-xl btn-primary text-sm transition-all duration-150 disabled:opacity-50"
                 >
                   {saveLoading && <Loader2 className="h-4 w-4 animate-spin" />}
                   <span>Save Configuration</span>
@@ -224,9 +223,9 @@ const Settings = () => {
 
           {/* Test connection panel */}
           <div className="space-y-6">
-            <GlassCard className="border border-white/5 flex flex-col justify-between h-full">
+            <GlassCard className="border border-[#1c1e2d] flex flex-col justify-between h-full">
               <div className="space-y-4">
-                <h3 className="text-lg font-bold font-sans text-white border-b border-white/5 pb-3">
+                <h3 className="text-lg font-bold font-sans text-white border-b border-[#1c1e2d] pb-3">
                   Connection Health
                 </h3>
                 
@@ -234,7 +233,7 @@ const Settings = () => {
                 <div className="py-6 flex flex-col items-center justify-center text-center">
                   {connectionStatus === 'untested' && (
                     <div className="space-y-2">
-                      <div className="h-12 w-12 rounded-full bg-slate-800/40 border border-white/5 flex items-center justify-center text-slate-500 mx-auto">
+                      <div className="h-12 w-12 rounded-full bg-[#07080c]/50 border border-[#1c1e2d] flex items-center justify-center text-slate-500 mx-auto">
                         <Link2 className="h-6 w-6" />
                       </div>
                       <span className="text-xs text-slate-400 font-medium block">Untested Connection</span>
@@ -275,7 +274,7 @@ const Settings = () => {
               <button
                 onClick={handleTestConnection}
                 disabled={testLoading || (!hasSecret && !formData.client_secret)}
-                className="w-full py-2.5 rounded-xl bg-slate-800/40 hover:bg-slate-800 text-slate-200 border border-white/5 transition-all text-xs font-semibold active:scale-95 disabled:opacity-35 disabled:pointer-events-none"
+                className="w-full py-2.5 rounded-xl btn-secondary transition-all text-xs font-semibold active:scale-95 disabled:opacity-35 disabled:pointer-events-none"
               >
                 {testLoading ? 'Testing...' : 'Test Connection'}
               </button>

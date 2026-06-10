@@ -212,7 +212,7 @@ const Dashboard = () => {
       </div>
 
       {/* Filter and Controls Header */}
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 bg-slate-900/20 border border-white/5 p-4 rounded-2xl backdrop-blur-md">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 bg-[#11131e]/50 border border-[#1c1e2d] p-4 rounded-2xl">
         <div className="flex flex-1 flex-col sm:flex-row gap-3">
           {/* Search Input */}
           <div className="relative flex-1">
@@ -232,7 +232,7 @@ const Dashboard = () => {
             <select
               value={rgFilter}
               onChange={(e) => setRgFilter(e.target.value)}
-              className="pl-10 pr-8 py-2 text-sm rounded-xl text-slate-300 glass-input appearance-none bg-slate-950 font-medium"
+              className="pl-10 pr-8 py-2 text-sm rounded-xl text-slate-300 glass-input appearance-none bg-[#07080c] font-medium"
             >
               <option value="">All Resource Groups</option>
               {rgs.map(rg => (
@@ -246,7 +246,7 @@ const Dashboard = () => {
         <button
           onClick={handleSyncCache}
           disabled={isSyncing}
-          className="flex items-center justify-center space-x-2 px-4 py-2 rounded-xl bg-slate-800/40 hover:bg-slate-800 text-slate-300 border border-white/5 transition-all duration-150 active:scale-95 text-sm font-semibold"
+          className="flex items-center justify-center space-x-2 px-4 py-2 rounded-xl btn-secondary text-sm transition-all duration-150 active:scale-95"
         >
           <RefreshCw className={`h-4 w-4 ${isSyncing ? 'animate-spin' : ''}`} />
           <span>Sync Azure Portal</span>
@@ -261,7 +261,7 @@ const Dashboard = () => {
         </div>
       ) : filteredVms.length === 0 ? (
         <GlassCard className="flex flex-col items-center justify-center py-16 text-center">
-          <div className="h-12 w-12 rounded-full bg-slate-800/40 border border-white/5 flex items-center justify-center text-slate-500 mb-4">
+          <div className="h-12 w-12 rounded-full bg-[#07080c]/50 border border-[#1c1e2d] flex items-center justify-center text-slate-500 mb-4">
             <ShieldAlert className="h-6 w-6" />
           </div>
           <h3 className="text-lg font-bold text-white">No Virtual Machines Found</h3>
@@ -286,7 +286,7 @@ const Dashboard = () => {
             const status = getStatusStyle(vm.power_state);
 
             return (
-              <GlassCard key={`${vm.resource_group}/${vm.name}`} className="flex flex-col justify-between border border-white/5 hover:border-white/10 shadow-lg" hover>
+              <GlassCard key={`${vm.resource_group}/${vm.name}`} className="flex flex-col justify-between border border-[#1c1e2d] hover:border-[#2b2e44] shadow-lg" hover>
                 {/* Header */}
                 <div className="mb-4">
                   <div className="flex items-start justify-between">
@@ -303,7 +303,7 @@ const Dashboard = () => {
                 </div>
 
                 {/* Details */}
-                <div className="space-y-2 text-xs border-t border-white/5 py-4 text-slate-400">
+                <div className="space-y-2 text-xs border-t border-[#1c1e2d] py-4 text-slate-400">
                   <div className="flex justify-between">
                     <span>Region:</span>
                     <span className="font-semibold text-slate-300">{vm.location}</span>
@@ -315,7 +315,7 @@ const Dashboard = () => {
                 </div>
 
                 {/* Actions Footer */}
-                <div className="grid grid-cols-3 gap-2 border-t border-white/5 pt-4">
+                <div className="grid grid-cols-3 gap-2 border-t border-[#1c1e2d] pt-4">
                   {/* Start Button */}
                   <button
                     onClick={() => handleVmAction(vm, 'start')}

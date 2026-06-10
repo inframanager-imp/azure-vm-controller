@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../components/Toast';
 import { Lock, User as UserIcon, Loader2 } from 'lucide-react';
-import logo from '../assets/logo.png';
 import GlassCard from '../components/GlassCard';
 
 const Login = () => {
@@ -39,16 +38,12 @@ const Login = () => {
   return (
     <div className="flex min-h-screen items-center justify-center p-4 relative">
       <div className="w-full max-w-md">
-        <GlassCard className="border border-slate-700/50 shadow-xl p-8">
-          {/* Logo */}
+        <GlassCard className="border border-[#1c1e2d] shadow-xl p-8">
+          {/* Logo Title */}
           <div className="flex flex-col items-center mb-8">
-            <img src={logo} alt="Gyan Logo" className="h-14 w-auto mb-3 object-contain" />
             <h2 className="text-2xl font-bold font-sans text-white tracking-wide">
               Gyan Azure VM Manager
             </h2>
-            <p className="text-xs uppercase tracking-[0.25em] text-[#14B8A6] mt-2 font-medium">
-              AI You Can Trust
-            </p>
           </div>
 
           {/* Form */}
@@ -97,7 +92,7 @@ const Login = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full flex items-center justify-center py-3 px-4 rounded-xl bg-gradient-to-r from-teal-500 to-emerald-500 text-white font-semibold text-sm transition-all duration-200 hover:opacity-90 active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none shadow-lg shadow-teal-500/20"
+              className="w-full flex items-center justify-center py-3 px-4 rounded-xl btn-primary text-sm transition-all duration-150 disabled:opacity-50 disabled:pointer-events-none"
             >
               {loading ? (
                 <>

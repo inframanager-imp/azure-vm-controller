@@ -53,10 +53,10 @@ const Navbar = ({ onCacheRefresh }) => {
   const showRefresh = location.pathname === '/';
 
   return (
-    <header className="h-20 glass-panel border-b border-white/5 px-8 flex items-center justify-between sticky top-0 z-40 bg-[#090D16]/40 backdrop-blur-md">
+    <header className="h-20 bg-[#0a0b10]/80 border-b border-[#1c1e2d] px-8 flex items-center justify-between sticky top-0 z-40 backdrop-blur-md">
       {/* Title */}
       <div>
-        <h1 className="text-xl font-bold font-sans tracking-wide text-white uppercase bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent">
+        <h1 className="text-lg font-semibold tracking-wide text-slate-100 uppercase">
           {getPageTitle()}
         </h1>
       </div>
@@ -76,7 +76,7 @@ const Navbar = ({ onCacheRefresh }) => {
         )}
 
         {/* Status Pill */}
-        <div className="flex items-center space-x-2 bg-slate-900/40 border border-white/5 px-3 py-1.5 rounded-lg text-xs font-medium text-slate-400">
+        <div className="flex items-center space-x-2 bg-[#07080c]/50 border border-[#1c1e2d] px-3 py-1.5 rounded-lg text-xs font-medium text-slate-400">
           <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
           <span>Azure Portal Connected</span>
         </div>

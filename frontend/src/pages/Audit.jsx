@@ -61,7 +61,7 @@ const Audit = () => {
   return (
     <div className="space-y-8">
       {/* Filtering Header panel */}
-      <div className="flex flex-col sm:flex-row gap-4 bg-slate-900/20 border border-white/5 p-4 rounded-2xl backdrop-blur-md">
+      <div className="flex flex-col sm:flex-row gap-4 bg-[#11131e]/50 border border-[#1c1e2d] p-4 rounded-2xl">
         {/* User Filter */}
         <div className="relative flex-1">
           <Search className="absolute inset-y-0 left-3 h-4 w-4 my-auto text-slate-500" />
@@ -92,7 +92,7 @@ const Audit = () => {
           <select
             value={filterAction}
             onChange={(e) => setFilterAction(e.target.value)}
-            className="w-full pl-10 pr-8 py-2 text-sm rounded-xl text-slate-300 glass-input appearance-none bg-slate-950 font-medium"
+            className="w-full pl-10 pr-8 py-2 text-sm rounded-xl text-slate-300 glass-input appearance-none bg-[#07080c] font-medium"
           >
             <option value="">All Actions</option>
             <option value="start">start</option>
@@ -112,7 +112,7 @@ const Audit = () => {
         </div>
       ) : logs.length === 0 ? (
         <GlassCard className="flex flex-col items-center justify-center py-16 text-center">
-          <div className="h-12 w-12 rounded-full bg-slate-800/40 border border-white/5 flex items-center justify-center text-slate-500 mb-4">
+          <div className="h-12 w-12 rounded-full bg-[#07080c]/50 border border-[#1c1e2d] flex items-center justify-center text-slate-500 mb-4">
             <FileSpreadsheet className="h-6 w-6" />
           </div>
           <h3 className="text-lg font-bold text-white">No Logs Found</h3>
@@ -121,10 +121,10 @@ const Audit = () => {
           </p>
         </GlassCard>
       ) : (
-        <div className="overflow-x-auto rounded-2xl border border-white/5 glass-panel">
+        <div className="overflow-x-auto rounded-2xl border border-[#1c1e2d] glass-panel">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="border-b border-white/5 bg-slate-950/20 text-xs font-semibold text-slate-400 uppercase tracking-wider">
+              <tr className="border-b border-[#1c1e2d] bg-[#07080c]/50 text-xs font-semibold text-slate-400 uppercase tracking-wider">
                 <th className="py-4 px-6">Timestamp</th>
                 <th className="py-4 px-6">Operator</th>
                 <th className="py-4 px-6">Target VM/RG</th>
@@ -132,13 +132,13 @@ const Audit = () => {
                 <th className="py-4 px-6">Execution Status</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-white/5 text-sm text-slate-300">
+            <tbody className="divide-y divide-[#1c1e2d] text-sm text-slate-300">
               {logs.map(log => {
                 const isScheduler = log.username.toLowerCase() === 'scheduler';
                 const isSuccess = log.result.toLowerCase() === 'success' || log.result.toLowerCase().startsWith('success:');
 
                 return (
-                  <tr key={log.id} className="hover:bg-white/5 transition-colors duration-150">
+                  <tr key={log.id} className="hover:bg-[#161824]/50 transition-colors duration-150">
                     <td className="py-4 px-6 text-slate-400 text-xs">
                       {formatDate(log.timestamp)}
                     </td>

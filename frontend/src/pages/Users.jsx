@@ -184,7 +184,7 @@ const Users = () => {
   return (
     <div className="space-y-8">
       {/* Top action header */}
-      <div className="flex justify-between items-center bg-slate-900/20 border border-white/5 p-4 rounded-2xl backdrop-blur-md">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-[#11131e]/50 border border-[#1c1e2d] p-4 rounded-2xl">
         <div className="flex items-center space-x-2 text-slate-400 text-xs">
           <Shield className="h-4 w-4 text-teal-400" />
           <span>Role-Based Access Control (RBAC): Standard users require explicit grants to control VMs.</span>
@@ -192,7 +192,7 @@ const Users = () => {
         
         <button
           onClick={() => handleOpenUserModal('create')}
-          className="flex items-center space-x-2 px-4 py-2 rounded-xl bg-gradient-to-r from-teal-500 to-emerald-500 text-white font-semibold text-sm transition-all duration-200 hover:opacity-90 active:scale-[0.98] shadow-lg shadow-teal-500/20"
+          className="flex items-center space-x-2 px-4 py-2 rounded-xl btn-primary text-sm transition-all duration-150"
         >
           <Plus className="h-4 w-4" />
           <span>Create Account</span>
@@ -206,10 +206,10 @@ const Users = () => {
           <span className="text-sm text-slate-400">Loading user profiles...</span>
         </div>
       ) : (
-        <div className="overflow-x-auto rounded-2xl border border-white/5 glass-panel">
+        <div className="overflow-x-auto rounded-2xl border border-[#1c1e2d] glass-panel">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="border-b border-white/5 bg-slate-950/20 text-xs font-semibold text-slate-400 uppercase tracking-wider">
+              <tr className="border-b border-[#1c1e2d] bg-[#07080c]/50 text-xs font-semibold text-slate-400 uppercase tracking-wider">
                 <th className="py-4 px-6">Username</th>
                 <th className="py-4 px-6">Email Address</th>
                 <th className="py-4 px-6">Role</th>
@@ -218,21 +218,21 @@ const Users = () => {
                 <th className="py-4 px-6 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-white/5 text-sm text-slate-300">
+            <tbody className="divide-y divide-[#1c1e2d] text-sm text-slate-300">
               {users.map(u => (
-                <tr key={u.id} className="hover:bg-white/5 transition-colors duration-150">
+                <tr key={u.id} className="hover:bg-[#161824]/50 transition-colors duration-150">
                   <td className="py-4 px-6 font-semibold text-slate-200">{u.username}</td>
                   <td className="py-4 px-6">{u.email}</td>
                   <td className="py-4 px-6">
-                    <span className={`inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider ${
-                      u.role === 'admin' ? 'bg-teal-500/10 text-teal-400' : 'bg-slate-500/10 text-slate-400'
+                    <span className={`inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider border ${
+                      u.role === 'admin' ? 'bg-teal-500/10 text-teal-400 border-teal-500/20' : 'bg-[#161822] text-slate-300 border-[#252839]'
                     }`}>
                       {u.role}
                     </span>
                   </td>
                   <td className="py-4 px-6">
-                    <span className={`inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider ${
-                      u.is_active ? 'bg-emerald-500/10 text-emerald-400' : 'bg-red-500/10 text-red-400'
+                    <span className={`inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider border ${
+                      u.is_active ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' : 'bg-red-500/10 text-red-400 border-red-500/20'
                     }`}>
                       {u.is_active ? 'active' : 'disabled'}
                     </span>
@@ -262,7 +262,7 @@ const Users = () => {
                       {/* Edit Button */}
                       <button
                         onClick={() => handleOpenUserModal('edit', u)}
-                        className="p-1.5 rounded-lg bg-slate-800/40 hover:bg-slate-800 text-slate-300 border border-white/5 transition-colors duration-150"
+                        className="p-1.5 rounded-lg btn-secondary transition-colors duration-150"
                         title="Edit Account Details"
                       >
                         <Edit3 className="h-4 w-4" />
@@ -271,7 +271,7 @@ const Users = () => {
                       {/* Delete Button */}
                       <button
                         onClick={() => handleDeleteUser(u.id, u.username)}
-                        className="p-1.5 rounded-lg bg-red-950/10 hover:bg-red-950/20 text-red-400 border border-red-950/30 transition-colors duration-150"
+                        className="p-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 transition-all duration-150"
                         title="Delete User"
                       >
                         <Trash2 className="h-4 w-4" />
@@ -289,7 +289,7 @@ const Users = () => {
       {userModal.isOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
           <div className="w-full max-w-md animate-in fade-in zoom-in-95 duration-200">
-            <GlassCard className="border border-white/10 shadow-2xl">
+            <GlassCard className="border border-[#1c1e2d] shadow-2xl">
               <h3 className="text-xl font-bold font-sans text-white mb-6">
                 {userModal.type === 'create' ? 'Create New Account' : 'Edit Account Profile'}
               </h3>
@@ -351,7 +351,7 @@ const Users = () => {
                     <select
                       value={userForm.role}
                       onChange={(e) => setUserForm(prev => ({ ...prev, role: e.target.value }))}
-                      className="w-full px-4 py-2.5 text-sm rounded-xl text-slate-300 glass-input appearance-none bg-slate-950"
+                      className="w-full px-4 py-2.5 text-sm rounded-xl text-slate-300 glass-input appearance-none bg-[#07080c]"
                     >
                       <option value="user">User (RBAC scoped)</option>
                       <option value="admin">Administrator (Full Access)</option>
@@ -366,7 +366,7 @@ const Users = () => {
                     <select
                       value={userForm.is_active}
                       onChange={(e) => setUserForm(prev => ({ ...prev, is_active: e.target.value === 'true' }))}
-                      className="w-full px-4 py-2.5 text-sm rounded-xl text-slate-300 glass-input appearance-none bg-slate-950"
+                      className="w-full px-4 py-2.5 text-sm rounded-xl text-slate-300 glass-input appearance-none bg-[#07080c]"
                     >
                       <option value="true">Active / Enabled</option>
                       <option value="false">Disabled</option>
@@ -375,18 +375,18 @@ const Users = () => {
                 </div>
 
                 {/* Footer buttons */}
-                <div className="flex justify-end space-x-3 border-t border-white/5 pt-4 mt-6">
+                <div className="flex justify-end space-x-3 border-t border-[#1c1e2d] pt-4 mt-6">
                   <button
                     type="button"
                     onClick={() => setUserModal({ isOpen: false, type: 'create', user: null })}
-                    className="px-4 py-2 text-sm font-medium rounded-lg bg-slate-800/60 hover:bg-slate-800 text-slate-300 border border-white/5 transition-all duration-150"
+                    className="px-4 py-2 text-sm font-medium rounded-lg btn-secondary transition-all duration-150"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
                     disabled={formLoading}
-                    className="flex items-center space-x-2 px-5 py-2 rounded-lg bg-gradient-to-r from-teal-500 to-emerald-500 text-white font-semibold text-sm transition-all duration-200 hover:opacity-90 active:scale-[0.98] disabled:opacity-50"
+                    className="flex items-center space-x-2 px-5 py-2 rounded-lg btn-primary text-sm transition-all duration-150 disabled:opacity-50"
                   >
                     {formLoading && <Loader2 className="h-4 w-4 animate-spin" />}
                     <span>{userModal.type === 'create' ? 'Create User' : 'Save Changes'}</span>
@@ -402,7 +402,7 @@ const Users = () => {
       {grantModal.isOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
           <div className="w-full max-w-2xl animate-in fade-in zoom-in-95 duration-200">
-            <GlassCard className="border border-white/10 shadow-2xl max-h-[85vh] flex flex-col justify-between overflow-hidden">
+            <GlassCard className="border border-[#1c1e2d] shadow-2xl max-h-[85vh] flex flex-col justify-between overflow-hidden">
               {/* Header */}
               <div className="mb-4">
                 <h3 className="text-xl font-bold font-sans text-white">
@@ -417,7 +417,7 @@ const Users = () => {
               <div className="flex-1 overflow-y-auto space-y-6 pr-1 my-4">
                 
                 {/* Grant Insertion Form */}
-                <div className="bg-slate-950/40 border border-white/5 p-4 rounded-xl space-y-4">
+                <div className="bg-[#07080c]/40 border border-[#1c1e2d] p-4 rounded-xl space-y-4">
                   <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider block">Add New Scope Grant</span>
                   
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -427,7 +427,7 @@ const Users = () => {
                       <select
                         value={newGrant.resource_group}
                         onChange={(e) => setNewGrant(prev => ({ ...prev, resource_group: e.target.value, vm_name: '*' }))}
-                        className="w-full px-3 py-2 text-xs rounded-lg text-slate-300 glass-input bg-slate-950"
+                        className="w-full px-3 py-2 text-xs rounded-lg text-slate-300 glass-input bg-[#07080c]"
                       >
                         <option value="*">* (All Resource Groups)</option>
                         {azureRgs.map(rg => (
@@ -457,7 +457,7 @@ const Users = () => {
                         type="checkbox"
                         checked={newGrant.can_start}
                         onChange={(e) => setNewGrant(prev => ({ ...prev, can_start: e.target.checked }))}
-                        className="rounded border-slate-700 bg-slate-900 text-teal-500 focus:ring-teal-500/20"
+                        className="rounded border-[#1c1e2d] bg-[#07080c] text-teal-500 focus:ring-teal-500/20"
                       />
                       <span>Start</span>
                     </label>
@@ -466,7 +466,7 @@ const Users = () => {
                         type="checkbox"
                         checked={newGrant.can_stop}
                         onChange={(e) => setNewGrant(prev => ({ ...prev, can_stop: e.target.checked }))}
-                        className="rounded border-slate-700 bg-slate-900 text-teal-500 focus:ring-teal-500/20"
+                        className="rounded border-[#1c1e2d] bg-[#07080c] text-teal-500 focus:ring-teal-500/20"
                       />
                       <span>Stop</span>
                     </label>
@@ -475,7 +475,7 @@ const Users = () => {
                         type="checkbox"
                         checked={newGrant.can_restart}
                         onChange={(e) => setNewGrant(prev => ({ ...prev, can_restart: e.target.checked }))}
-                        className="rounded border-slate-700 bg-slate-900 text-teal-500 focus:ring-teal-500/20"
+                        className="rounded border-[#1c1e2d] bg-[#07080c] text-teal-500 focus:ring-teal-500/20"
                       />
                       <span>Restart</span>
                     </label>
@@ -484,7 +484,7 @@ const Users = () => {
                   <button
                     type="button"
                     onClick={handleAddGrant}
-                    className="w-full py-2 rounded-lg bg-slate-800 hover:bg-slate-750 text-slate-200 border border-white/5 transition-all text-xs font-semibold"
+                    className="w-full py-2 rounded-lg btn-secondary transition-all text-xs font-semibold"
                   >
                     Add Scope to List
                   </button>
@@ -495,14 +495,14 @@ const Users = () => {
                   <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider block">Configured Access Grants</span>
                   
                   {userGrants.length === 0 ? (
-                    <div className="text-center py-6 border border-dashed border-white/5 rounded-xl text-slate-500 text-xs">
+                    <div className="text-center py-6 border border-dashed border-[#1c1e2d] rounded-xl text-slate-500 text-xs">
                       No scopes assigned yet. User will not see any VMs in the Dashboard.
                     </div>
                   ) : (
-                    <div className="overflow-hidden rounded-xl border border-white/5 bg-slate-950/20">
+                    <div className="overflow-hidden rounded-xl border border-[#1c1e2d] bg-[#07080c]/20">
                       <table className="w-full text-left text-xs border-collapse">
                         <thead>
-                          <tr className="bg-slate-950/40 text-[10px] font-bold text-slate-500 uppercase tracking-wider border-b border-white/5">
+                          <tr className="bg-[#07080c]/40 text-[10px] font-bold text-slate-500 uppercase tracking-wider border-b border-[#1c1e2d]">
                             <th className="p-3">Resource Group</th>
                             <th className="p-3">VM Scope</th>
                             <th className="p-3 text-center">Start</th>
@@ -511,9 +511,9 @@ const Users = () => {
                             <th className="p-3 text-right">Remove</th>
                           </tr>
                         </thead>
-                        <tbody className="divide-y divide-white/5 text-slate-300">
+                        <tbody className="divide-y divide-[#1c1e2d] text-slate-300">
                           {userGrants.map((g, idx) => (
-                            <tr key={idx} className="hover:bg-white/5 transition-colors">
+                            <tr key={idx} className="hover:bg-[#161824]/50 transition-colors">
                               <td className="p-3 font-semibold text-slate-200">{g.resource_group}</td>
                               <td className="p-3">{g.vm_name}</td>
                               <td className="p-3 text-center">
@@ -544,11 +544,11 @@ const Users = () => {
               </div>
 
               {/* Footer Save Actions */}
-              <div className="flex justify-end space-x-3 border-t border-white/5 pt-4">
+              <div className="flex justify-end space-x-3 border-t border-[#1c1e2d] pt-4">
                 <button
                   type="button"
                   onClick={() => setGrantModal({ isOpen: false, user: null })}
-                  className="px-4 py-2 text-sm font-medium rounded-lg bg-slate-800/60 hover:bg-slate-800 text-slate-300 border border-white/5 transition-all duration-150"
+                  className="px-4 py-2 text-sm font-medium rounded-lg btn-secondary transition-all duration-150"
                 >
                   Cancel
                 </button>
@@ -556,7 +556,7 @@ const Users = () => {
                   type="button"
                   onClick={handleSaveGrants}
                   disabled={formLoading}
-                  className="flex items-center space-x-2 px-5 py-2 rounded-lg bg-[#14B8A6] hover:bg-[#14B8A6]/90 text-white font-semibold text-sm transition-all duration-200"
+                  className="flex items-center space-x-2 px-5 py-2 rounded-lg btn-primary text-sm transition-all duration-150"
                 >
                   {formLoading && <Loader2 className="h-4 w-4 animate-spin" />}
                   <span>Save Access Grants</span>
