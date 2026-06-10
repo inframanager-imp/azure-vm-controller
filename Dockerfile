@@ -1,40 +1,26 @@
-# Stage 1: Build the React application
-FROM node:18-alpine AS builder
-
-WORKDIR /frontend
-
-# Copy package descriptors and install dependencies
-COPY frontend/package*.json ./
-RUN npm ci
-
-# Copy frontend source files and compile
-COPY frontend/ ./
-RUN npm run build
-
-# Stage 2: Serve using Python FastAPI
+# Single-stage build: Python FastAPI with Jinja2 templates (no React)
 FROM python:3.11-slim
 
 WORKDIR /app
 
-# Install system dependencies if any are needed (e.g. for cryptography)
-# Note: Cryptography, bcrypt, etc. have pre-compiled wheels, so build-essential is omitted.
-# We do not run apt-get here to bypass the APT update/post-invoke issues.
-
-# Copy and install python dependencies (using --progress-bar off to prevent thread limit crash)
+# Copy and install python dependencies
 COPY backend/requirements.txt .
 RUN pip install --no-cache-dir --progress-bar off -r requirements.txt
 
 # Copy backend app codebase
 COPY backend/app/ app/
 
-# Copy built frontend assets from builder stage into static/ directory
-COPY --from=builder /frontend/dist/ static/
+# Copy Jinja2 templates
+COPY backend/templates/ templates/
+
+# Copy static assets (CSS, JS)
+COPY backend/static/ static/
 
 # Create database directory to persist SQLite
 RUN mkdir -p db
 
-# Port 8000 for the unified FastAPI + SPA web application
+# Port 8000 for the unified FastAPI + Jinja2 web application
 EXPOSE 8000
 
-# Run uvicorn with single worker (APScheduler compatibility Correction #2)
+# Run uvicorn with single worker (APScheduler compatibility)
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "1"]
