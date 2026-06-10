@@ -38,7 +38,7 @@ const Login = () => {
   return (
     <div className="flex min-h-screen items-center justify-center p-4 relative">
       <div className="w-full max-w-md">
-        <GlassCard className="border border-[#1c1e2d] shadow-xl p-8">
+        <GlassCard className="border border-zinc-800 shadow-xl p-8">
           {/* Logo Title */}
           <div className="flex flex-col items-center mb-8">
             <h2 className="text-2xl font-bold font-sans text-white tracking-wide">

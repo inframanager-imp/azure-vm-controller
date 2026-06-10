@@ -142,8 +142,8 @@ const Settings = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           
           {/* Settings Fields Card */}
-          <GlassCard className="md:col-span-2 border border-[#1c1e2d] space-y-6">
-            <h3 className="text-lg font-bold font-sans text-white border-b border-[#1c1e2d] pb-3">
+          <GlassCard className="md:col-span-2 border border-zinc-800 space-y-6">
+            <h3 className="text-lg font-bold font-sans text-white border-b border-zinc-800 pb-3">
               Service Principal Credentials
             </h3>
 
@@ -223,9 +223,9 @@ const Settings = () => {
 
           {/* Test connection panel */}
           <div className="space-y-6">
-            <GlassCard className="border border-[#1c1e2d] flex flex-col justify-between h-full">
+            <GlassCard className="border border-zinc-800 flex flex-col justify-between h-full">
               <div className="space-y-4">
-                <h3 className="text-lg font-bold font-sans text-white border-b border-[#1c1e2d] pb-3">
+                <h3 className="text-lg font-bold font-sans text-white border-b border-zinc-800 pb-3">
                   Connection Health
                 </h3>
                 
@@ -233,7 +233,7 @@ const Settings = () => {
                 <div className="py-6 flex flex-col items-center justify-center text-center">
                   {connectionStatus === 'untested' && (
                     <div className="space-y-2">
-                      <div className="h-12 w-12 rounded-full bg-[#07080c]/50 border border-[#1c1e2d] flex items-center justify-center text-slate-500 mx-auto">
+                      <div className="h-12 w-12 rounded-full bg-[#09090b]/50 border border-zinc-800 flex items-center justify-center text-slate-500 mx-auto">
                         <Link2 className="h-6 w-6" />
                       </div>
                       <span className="text-xs text-slate-400 font-medium block">Untested Connection</span>

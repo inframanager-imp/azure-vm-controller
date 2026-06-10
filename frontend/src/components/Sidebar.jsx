@@ -29,18 +29,18 @@ const Sidebar = () => {
   ];
 
   return (
-    <aside className="w-64 bg-[#0b0c12] border-r border-[#1c1e2d] h-screen sticky top-0 flex flex-col justify-between">
+    <aside className="w-60 bg-[#09090b] border-r border-zinc-800 h-screen sticky top-0 flex flex-col justify-between">
       {/* Top Section */}
       <div className="flex flex-col flex-1 py-6">
         {/* Logo and Brand */}
         <div className="px-6 mb-8 flex flex-col">
-          <span className="text-xl font-bold font-sans text-white tracking-wide">
-            GYAN
+          <span className="text-sm font-extrabold font-sans text-white tracking-[0.25em] uppercase">
+            Gyan
           </span>
         </div>
 
         {/* Navigation Menu */}
-        <nav className="flex-1 px-4 space-y-1">
+        <nav className="flex-1 px-4 space-y-1.5">
           {navItems.map((item) => {
             if (!item.show) return null;
             return (
@@ -48,13 +48,13 @@ const Sidebar = () => {
                 key={item.name}
                 to={item.path}
                 className={({ isActive }) => `
-                  flex items-center px-4 py-3 text-sm font-medium rounded-xl transition-all duration-150 group
+                  flex items-center px-4 py-2.5 text-xs font-semibold rounded-lg transition-all duration-150 group
                   ${isActive 
-                    ? 'bg-[#14B8A6]/10 text-[#14B8A6] border-l-2 border-[#14B8A6]' 
-                    : 'text-slate-400 hover:bg-[#161824]/50 hover:text-slate-100'}
+                    ? 'bg-zinc-800 text-zinc-100' 
+                    : 'text-zinc-400 hover:bg-zinc-900 hover:text-zinc-200'}
                 `}
               >
-                <item.icon className="mr-3 h-5 w-5 flex-shrink-0 transition-colors" />
+                <item.icon className="mr-3 h-4 w-4 flex-shrink-0 transition-colors" />
                 {item.name}
               </NavLink>
             );
@@ -63,17 +63,17 @@ const Sidebar = () => {
       </div>
 
       {/* Bottom User Profile Section */}
-      <div className="p-4 border-t border-[#1c1e2d] bg-[#07080c]/30">
+      <div className="p-4 border-t border-zinc-800 bg-zinc-950/20">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center space-x-3 min-w-0">
-            <div className="h-9 w-9 rounded-lg bg-teal-500/10 border border-teal-500/20 flex items-center justify-center text-teal-400">
-              <UserIcon className="h-5 w-5" />
+            <div className="h-8 w-8 rounded-lg bg-zinc-800 border border-zinc-700/50 flex items-center justify-center text-zinc-300">
+              <UserIcon className="h-4 w-4" />
             </div>
             <div className="flex flex-col min-w-0">
-              <span className="text-sm font-semibold text-slate-200 truncate font-sans">
+              <span className="text-xs font-semibold text-zinc-200 truncate font-sans">
                 {user?.username}
               </span>
-              <span className="text-[10px] text-slate-500 capitalize">
+              <span className="text-[10px] text-zinc-500 capitalize">
                 {user?.role}
               </span>
             </div>
@@ -81,7 +81,7 @@ const Sidebar = () => {
         </div>
         <button
           onClick={handleLogout}
-          className="w-full flex items-center justify-center px-4 py-2.5 text-xs font-semibold text-red-400/80 hover:text-red-400 bg-red-950/10 hover:bg-red-950/20 border border-red-950/30 rounded-xl transition-all duration-150"
+          className="w-full flex items-center justify-center px-4 py-2 text-xs font-semibold text-zinc-400 hover:text-red-400 bg-zinc-900 hover:bg-red-500/10 border border-zinc-800 hover:border-red-500/20 rounded-lg transition-all duration-150"
         >
           <LogOut className="mr-2 h-4 w-4" />
           Log Out

@@ -150,73 +150,70 @@ const Dashboard = () => {
     const s = state.toLowerCase();
     if (s.includes('running')) {
       return {
-        pill: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20 text-glow-green',
+        pill: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/15',
         dot: 'bg-emerald-500 animate-pulse'
       };
     }
     if (s.includes('deallocated')) {
       return {
-        pill: 'bg-red-500/10 text-red-400 border-red-500/20',
-        dot: 'bg-red-500'
+        pill: 'bg-zinc-800 text-zinc-400 border-zinc-700/50',
+        dot: 'bg-zinc-500'
       };
     }
     if (s.includes('starting') || s.includes('stopping') || s.includes('restarting')) {
       return {
-        pill: 'bg-amber-500/10 text-amber-400 border-amber-500/20',
-        dot: 'bg-amber-500 animate-spin-slow'
+        pill: 'bg-amber-500/10 text-amber-400 border-amber-500/15',
+        dot: 'bg-amber-500 animate-pulse'
       };
     }
     return {
-      pill: 'bg-slate-500/10 text-slate-400 border-slate-500/20',
-      dot: 'bg-slate-500'
+      pill: 'bg-zinc-800 text-zinc-400 border-zinc-700/50',
+      dot: 'bg-zinc-500'
     };
   };
 
   return (
     <div className="space-y-8">
       {/* Top Banner/Summary Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <GlassCard className="flex items-center space-x-4">
-          <div className="p-3 rounded-xl bg-teal-500/10 text-teal-400">
-            <Cpu className="h-6 w-6" />
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+        <div className="p-6 rounded-xl border border-zinc-800 bg-[#18181b]/40">
+          <div className="flex justify-between items-center mb-2">
+            <span className="text-xs font-semibold text-zinc-400 uppercase tracking-wider">Total Resources</span>
+            <Cpu className="h-4 w-4 text-zinc-500" />
           </div>
-          <div>
-            <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Total Virtual Machines</p>
-            <h3 className="text-2xl font-bold text-white">{vms.length}</h3>
-          </div>
-        </GlassCard>
+          <div className="text-3xl font-bold tracking-tight text-white">{vms.length}</div>
+          <div className="text-[10px] text-zinc-500 mt-1">Virtual machines active in Azure</div>
+        </div>
         
-        <GlassCard className="flex items-center space-x-4">
-          <div className="p-3 rounded-xl bg-emerald-500/10 text-emerald-400">
-            <Play className="h-6 w-6" />
+        <div className="p-6 rounded-xl border border-zinc-800 bg-[#18181b]/40">
+          <div className="flex justify-between items-center mb-2">
+            <span className="text-xs font-semibold text-emerald-400 uppercase tracking-wider">Running</span>
+            <Play className="h-4 w-4 text-emerald-500" />
           </div>
-          <div>
-            <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Running VMs</p>
-            <h3 className="text-2xl font-bold text-white">
-              {vms.filter(vm => vm.power_state.toLowerCase().includes('running')).length}
-            </h3>
+          <div className="text-3xl font-bold tracking-tight text-emerald-400">
+            {vms.filter(vm => vm.power_state.toLowerCase().includes('running')).length}
           </div>
-        </GlassCard>
+          <div className="text-[10px] text-zinc-500 mt-1">Currently powered on</div>
+        </div>
 
-        <GlassCard className="flex items-center space-x-4">
-          <div className="p-3 rounded-xl bg-red-500/10 text-red-400">
-            <Square className="h-6 w-6" />
+        <div className="p-6 rounded-xl border border-zinc-800 bg-[#18181b]/40">
+          <div className="flex justify-between items-center mb-2">
+            <span className="text-xs font-semibold text-zinc-500 uppercase tracking-wider">Deallocated</span>
+            <Square className="h-4 w-4 text-zinc-500" />
           </div>
-          <div>
-            <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Stopped VMs</p>
-            <h3 className="text-2xl font-bold text-white">
-              {vms.filter(vm => vm.power_state.toLowerCase().includes('deallocated')).length}
-            </h3>
+          <div className="text-3xl font-bold tracking-tight text-zinc-100">
+            {vms.filter(vm => vm.power_state.toLowerCase().includes('deallocated')).length}
           </div>
-        </GlassCard>
+          <div className="text-[10px] text-zinc-500 mt-1">Stopped / billing suspended</div>
+        </div>
       </div>
 
       {/* Filter and Controls Header */}
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 bg-[#11131e]/50 border border-[#1c1e2d] p-4 rounded-2xl">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 p-4 rounded-xl border border-zinc-800 bg-[#18181b]/10">
         <div className="flex flex-1 flex-col sm:flex-row gap-3">
           {/* Search Input */}
           <div className="relative flex-1">
-            <Search className="absolute inset-y-0 left-3 h-4 w-4 my-auto text-slate-500" />
+            <Search className="absolute inset-y-0 left-3 h-4 w-4 my-auto text-zinc-500" />
             <input
               type="text"
               placeholder="Search by VM name..."
@@ -228,11 +225,11 @@ const Dashboard = () => {
 
           {/* RG Filter Select */}
           <div className="relative">
-            <Layers className="absolute inset-y-0 left-3 h-4 w-4 my-auto text-slate-500" />
+            <Layers className="absolute inset-y-0 left-3 h-4 w-4 my-auto text-zinc-500" />
             <select
               value={rgFilter}
               onChange={(e) => setRgFilter(e.target.value)}
-              className="pl-10 pr-8 py-2 text-sm rounded-xl text-slate-300 glass-input appearance-none bg-[#07080c] font-medium"
+              className="pl-10 pr-8 py-2 text-sm rounded-xl text-slate-300 glass-input appearance-none bg-[#09090b] font-medium"
             >
               <option value="">All Resource Groups</option>
               {rgs.map(rg => (
@@ -241,16 +238,6 @@ const Dashboard = () => {
             </select>
           </div>
         </div>
-
-        {/* Cache sync status controls */}
-        <button
-          onClick={handleSyncCache}
-          disabled={isSyncing}
-          className="flex items-center justify-center space-x-2 px-4 py-2 rounded-xl btn-secondary text-sm transition-all duration-150 active:scale-95"
-        >
-          <RefreshCw className={`h-4 w-4 ${isSyncing ? 'animate-spin' : ''}`} />
-          <span>Sync Azure Portal</span>
-        </button>
       </div>
 
       {/* Main VM List Grid */}
@@ -261,7 +248,7 @@ const Dashboard = () => {
         </div>
       ) : filteredVms.length === 0 ? (
         <GlassCard className="flex flex-col items-center justify-center py-16 text-center">
-          <div className="h-12 w-12 rounded-full bg-[#07080c]/50 border border-[#1c1e2d] flex items-center justify-center text-slate-500 mb-4">
+          <div className="h-12 w-12 rounded-full bg-[#09090b]/50 border border-zinc-800 flex items-center justify-center text-slate-500 mb-4">
             <ShieldAlert className="h-6 w-6" />
           </div>
           <h3 className="text-lg font-bold text-white">No Virtual Machines Found</h3>
@@ -286,16 +273,16 @@ const Dashboard = () => {
             const status = getStatusStyle(vm.power_state);
 
             return (
-              <GlassCard key={`${vm.resource_group}/${vm.name}`} className="flex flex-col justify-between border border-[#1c1e2d] hover:border-[#2b2e44] shadow-lg" hover>
+              <GlassCard key={`${vm.resource_group}/${vm.name}`} className="flex flex-col justify-between border border-zinc-800 hover:border-zinc-700 bg-zinc-900/10 shadow-md p-5 rounded-xl" hover>
                 {/* Header */}
                 <div className="mb-4">
                   <div className="flex items-start justify-between">
                     <div className="min-w-0">
-                      <h4 className="text-lg font-bold text-white truncate font-sans">{vm.name}</h4>
-                      <p className="text-xs text-slate-500 truncate mt-0.5">{vm.resource_group}</p>
+                      <h4 className="text-base font-bold text-zinc-100 truncate font-sans">{vm.name}</h4>
+                      <p className="text-[11px] text-zinc-500 font-mono mt-0.5 truncate">{vm.resource_group}</p>
                     </div>
-                    {/* Status Pill */}
-                    <div className={`flex items-center space-x-1.5 px-2.5 py-1 rounded-full border text-[10px] font-semibold uppercase tracking-wider ${status.pill}`}>
+                    {/* Status Badge */}
+                    <div className={`flex items-center space-x-1.5 px-2 py-0.5 rounded-full border text-[10px] font-semibold uppercase tracking-wider ${status.pill}`}>
                       <div className={`h-1.5 w-1.5 rounded-full ${status.dot}`} />
                       <span>{vm.power_state}</span>
                     </div>
@@ -303,50 +290,50 @@ const Dashboard = () => {
                 </div>
 
                 {/* Details */}
-                <div className="space-y-2 text-xs border-t border-[#1c1e2d] py-4 text-slate-400">
-                  <div className="flex justify-between">
-                    <span>Region:</span>
-                    <span className="font-semibold text-slate-300">{vm.location}</span>
+                <div className="space-y-2 text-xs border-t border-zinc-800/60 py-4 text-zinc-400">
+                  <div className="flex justify-between items-center">
+                    <span className="text-zinc-500">Region</span>
+                    <span className="font-mono text-zinc-300 bg-zinc-800/30 px-1.5 py-0.5 rounded border border-zinc-800/40 text-[10px]">{vm.location}</span>
                   </div>
-                  <div className="flex justify-between">
-                    <span>VM Size:</span>
-                    <span className="font-semibold text-slate-300">{vm.size}</span>
+                  <div className="flex justify-between items-center">
+                    <span className="text-zinc-500">VM Size</span>
+                    <span className="font-mono text-zinc-300 bg-zinc-800/30 px-1.5 py-0.5 rounded border border-zinc-800/40 text-[10px]">{vm.size}</span>
                   </div>
                 </div>
 
                 {/* Actions Footer */}
-                <div className="grid grid-cols-3 gap-2 border-t border-[#1c1e2d] pt-4">
+                <div className="grid grid-cols-3 gap-2.5 pt-4 border-t border-zinc-800/60 mt-auto">
                   {/* Start Button */}
                   <button
                     onClick={() => handleVmAction(vm, 'start')}
                     disabled={isTransitional || isRunning || !canStart}
-                    className="flex flex-col items-center justify-center py-2 px-1 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/15 disabled:opacity-30 disabled:pointer-events-none transition-all duration-150"
+                    className="flex items-center justify-center space-x-1.5 py-2 px-1 rounded-lg border text-xs font-semibold bg-emerald-500/5 hover:bg-emerald-500/10 text-emerald-400 border-emerald-500/15 disabled:opacity-20 disabled:pointer-events-none transition-all duration-150"
                     title="Start Virtual Machine"
                   >
-                    <Play className="h-4 w-4 mb-1" />
-                    <span className="text-[10px] font-semibold">Start</span>
+                    <Play className="h-3.5 w-3.5" />
+                    <span>Start</span>
                   </button>
 
                   {/* Stop Button */}
                   <button
                     onClick={() => openConfirmModal(vm, 'stop')}
                     disabled={isTransitional || isStopped || !canStop}
-                    className="flex flex-col items-center justify-center py-2 px-1 rounded-xl bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/15 disabled:opacity-30 disabled:pointer-events-none transition-all duration-150"
+                    className="flex items-center justify-center space-x-1.5 py-2 px-1 rounded-lg border text-xs font-semibold bg-red-500/5 hover:bg-red-500/10 text-red-400 border-red-500/15 disabled:opacity-20 disabled:pointer-events-none transition-all duration-150"
                     title="Stop (Deallocate) Virtual Machine to cease billing"
                   >
-                    <Square className="h-4 w-4 mb-1" />
-                    <span className="text-[10px] font-semibold">Stop</span>
+                    <Square className="h-3.5 w-3.5" />
+                    <span>Stop</span>
                   </button>
 
-                  {/* Restart Button (Correction #6: Hidden/Disabled if VM is not running) */}
+                  {/* Restart Button */}
                   <button
                     onClick={() => openConfirmModal(vm, 'restart')}
                     disabled={isTransitional || !isRunning || !canRestart}
-                    className="flex flex-col items-center justify-center py-2 px-1 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 border border-amber-500/15 disabled:opacity-30 disabled:pointer-events-none transition-all duration-150"
+                    className="flex items-center justify-center space-x-1.5 py-2 px-1 rounded-lg border text-xs font-semibold bg-amber-500/5 hover:bg-amber-500/10 text-amber-400 border-amber-500/15 disabled:opacity-20 disabled:pointer-events-none transition-all duration-150"
                     title="Restart Virtual Machine"
                   >
-                    <RotateCw className="h-4 w-4 mb-1" />
-                    <span className="text-[10px] font-semibold">Restart</span>
+                    <RotateCw className="h-3.5 w-3.5" />
+                    <span>Restart</span>
                   </button>
                 </div>
               </GlassCard>

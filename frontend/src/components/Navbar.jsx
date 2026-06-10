@@ -53,10 +53,10 @@ const Navbar = ({ onCacheRefresh }) => {
   const showRefresh = location.pathname === '/';
 
   return (
-    <header className="h-20 bg-[#0a0b10]/80 border-b border-[#1c1e2d] px-8 flex items-center justify-between sticky top-0 z-40 backdrop-blur-md">
+    <header className="h-20 bg-[#09090b]/80 border-b border-zinc-800 px-8 flex items-center justify-between sticky top-0 z-40 backdrop-blur-md">
       {/* Title */}
       <div>
-        <h1 className="text-lg font-semibold tracking-wide text-slate-100 uppercase">
+        <h1 className="text-sm font-semibold tracking-wider text-zinc-100 uppercase">
           {getPageTitle()}
         </h1>
       </div>
@@ -67,7 +67,7 @@ const Navbar = ({ onCacheRefresh }) => {
           <button
             onClick={handleForceRefresh}
             disabled={refreshing}
-            className="flex items-center space-x-2 px-3 py-1.5 rounded-lg bg-teal-500/10 hover:bg-teal-500/20 border border-teal-500/20 text-[#14B8A6] text-xs font-semibold transition-all duration-150 active:scale-95"
+            className="flex items-center space-x-2 px-3 py-1.5 rounded-lg btn-secondary text-xs transition-all duration-150 active:scale-95"
             title="Force refresh backend VM cache"
           >
             <RefreshCw className={`h-3.5 w-3.5 ${refreshing ? 'animate-spin' : ''}`} />
@@ -76,7 +76,7 @@ const Navbar = ({ onCacheRefresh }) => {
         )}
 
         {/* Status Pill */}
-        <div className="flex items-center space-x-2 bg-[#07080c]/50 border border-[#1c1e2d] px-3 py-1.5 rounded-lg text-xs font-medium text-slate-400">
+        <div className="flex items-center space-x-2 bg-zinc-900 border border-zinc-800 px-3 py-1.5 rounded-lg text-xs font-medium text-zinc-400">
           <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
           <span>Azure Portal Connected</span>
         </div>

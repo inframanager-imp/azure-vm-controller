@@ -4,63 +4,62 @@
 
 @layer base {
   body {
-    background-color: #0a0b10; /* Premium, clean dark slate-black */
-    color: #f1f5f9;
+    background-color: #09090b; /* Pure Slate-Black / Zinc-950 */
+    color: #fafafa;           /* Zinc-50 */
     font-family: 'Inter', sans-serif;
   }
   
   h1, h2, h3, h4, h5, h6 {
     font-family: 'Outfit', sans-serif;
+    letter-spacing: -0.02em;
   }
 }
 
 @layer utilities {
   /* Premium Solid Card Panels (SaaS Standard) */
   .glass-panel {
-    background-color: #11131e; /* Solid dark blue-slate card panel */
-    border: 1px solid #1c1e2d;    /* Crisp, clean dark gray border */
-    box-shadow: 0 4px 24px -2px rgba(0, 0, 0, 0.4);
+    background-color: #18181b; /* Zinc-900 Card panel */
+    border: 1px solid #27272a;    /* Zinc-800 Border */
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
   }
   
   .glass-panel-light {
-    background-color: #0d0e14; /* Slightly darker container */
-    border: 1px solid #171822;
+    background-color: #09090b; /* Slightly darker container */
+    border: 1px solid #18181b;
   }
   
   .glass-panel-hover {
-    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   }
   
   .glass-panel-hover:hover {
-    border-color: #2b2e44;      /* Soft border highlight */
-    background-color: #141624;  /* Accent card lift */
-    transform: translateY(-2px); /* Micro-interaction hover lift */
-    box-shadow: 0 16px 36px -8px rgba(0, 0, 0, 0.7);
+    border-color: #3f3f46;      /* Zinc-700 */
+    background-color: #202024;  /* Accent lift */
+    transform: translateY(-1px); /* Subtle micro-interaction lift */
   }
   
   /* Modern clean form inputs */
   .glass-input {
-    background-color: #07080c;
-    border: 1px solid #1c1e2d;
-    color: #e2e8f0;
+    background-color: #09090b;
+    border: 1px solid #27272a;
+    color: #fafafa;
     font-family: 'Inter', sans-serif;
-    transition: all 0.2s ease-in-out;
+    transition: all 0.15s ease-in-out;
   }
   
   .glass-input:focus {
-    background-color: #090a0f;
+    background-color: #09090b;
     border-color: #0d9488; /* Premium Teal-600 */
     outline: none;
-    box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.15); /* Sleek accent glow */
+    box-shadow: 0 0 0 2px rgba(13, 148, 136, 0.2); /* Sleek accent glow */
   }
 
   /* Button Helpers */
   .btn-primary {
     background-color: #0d9488; /* Solid Brand Teal */
     color: #ffffff;
-    font-weight: 600;
+    font-weight: 500;
     transition: all 0.15s ease-in-out;
-    box-shadow: 0 4px 12px rgba(13, 148, 136, 0.2);
   }
   
   .btn-primary:hover {
@@ -72,17 +71,17 @@
   }
   
   .btn-secondary {
-    background-color: #161822;
-    border: 1px solid #252839;
-    color: #cbd5e1;
-    font-weight: 600;
+    background-color: #18181b;
+    border: 1px solid #27272a;
+    color: #d4d4d8;
+    font-weight: 500;
     transition: all 0.15s ease-in-out;
   }
   
   .btn-secondary:hover {
-    background-color: #1e212f;
+    background-color: #27272a;
     color: #ffffff;
-    border-color: #3b3f58;
+    border-color: #3f3f46;
   }
 
   /* Remove text glow */
@@ -97,19 +96,20 @@
 
 /* Premium slim scrollbars */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #0a0b10;
+  background: #09090b;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #1c1e2d;
+  background: #27272a;
   border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #2c2f45;
+  background: #3f3f46;
 }
+
