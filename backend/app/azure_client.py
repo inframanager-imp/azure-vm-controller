@@ -21,6 +21,99 @@ VM_CACHE: Dict[str, Dict[str, Any]] = {}
 LAST_CACHE_REFRESH: float = 0.0
 CACHE_IS_REFRESHING: bool = False
 
+def populate_mock_vms():
+    global VM_CACHE
+    if VM_CACHE:
+        return
+    mock_data = {
+        "gyan-test/automation-test": {
+            "name": "Automation-Test",
+            "resource_group": "gyan-test",
+            "location": "eastus",
+            "size": "Standard_B2ms",
+            "power_state": "Running"
+        },
+        "cwb-dev/cwb-app-dev": {
+            "name": "cwb-app-dev",
+            "resource_group": "cwb-dev",
+            "location": "eastus2",
+            "size": "Standard_B2s",
+            "power_state": "Running"
+        },
+        "cwb-demo/cwb-apps-01": {
+            "name": "cwb-apps-01",
+            "resource_group": "cwb-demo",
+            "location": "eastus2",
+            "size": "Standard_D2s_v3",
+            "power_state": "Running"
+        },
+        "cwb-dev/cwb-data-01": {
+            "name": "cwb-data-01",
+            "resource_group": "cwb-dev",
+            "location": "eastus2",
+            "size": "Standard_D2s_v3",
+            "power_state": "Stopped (deallocated)"
+        },
+        "cwb-dev/cwb-mcq-gpu-wks-01": {
+            "name": "CWB-MCQ-GPU-WKS-01",
+            "resource_group": "cwb-dev",
+            "location": "eastus2",
+            "size": "Standard_NV12ads_A10_v6",
+            "power_state": "Stopped (deallocated)"
+        },
+        "gyan-das/gyan-engine-das-2": {
+            "name": "gyan-engine-das-2",
+            "resource_group": "gyan-das",
+            "location": "eastus2",
+            "size": "Standard_D8s_v3",
+            "power_state": "Running"
+        },
+        "gyan-das/gyan-engine-das-3": {
+            "name": "gyan-engine-das-3",
+            "resource_group": "gyan-das",
+            "location": "eastus2",
+            "size": "Standard_D8s_v3",
+            "power_state": "Running"
+        },
+        "gyan-demo/gyan-engine-demo-1": {
+            "name": "gyan-engine-demo-1",
+            "resource_group": "gyan-demo",
+            "location": "eastus2",
+            "size": "Standard_D8s_v3",
+            "power_state": "Running"
+        },
+        "gyan-legal/nda-ds-server-v2": {
+            "name": "nda-ds-server-v2",
+            "resource_group": "gyan-legal",
+            "location": "eastus2",
+            "size": "Standard_B2s",
+            "power_state": "Running"
+        },
+        "gyan-collection-ingestion/rapid-gyan-engine-2": {
+            "name": "rapid-gyan-engine-2",
+            "resource_group": "gyan-collection-ingestion",
+            "location": "eastus2",
+            "size": "Standard_D8s_v3",
+            "power_state": "Running"
+        },
+        "gyan-benchmarking/relevance-benchmarking-01": {
+            "name": "relevance-benchmarking-01",
+            "resource_group": "gyan-benchmarking",
+            "location": "eastus2",
+            "size": "Standard_D8s_v3",
+            "power_state": "Running"
+        },
+        "cwb-prod/workbench": {
+            "name": "workbench",
+            "resource_group": "cwb-prod",
+            "location": "eastus2",
+            "size": "Standard_D8s_v3",
+            "power_state": "Running"
+        }
+    }
+    VM_CACHE.update(mock_data)
+
+
 def get_fernet() -> Fernet:
     return Fernet(settings.FERNET_KEY.encode())
 
@@ -189,6 +282,7 @@ def list_allowed_vms(user_role: str, user_grants: List[VMGrant]) -> List[VMInfo]
     """
     Returns filtered list of VMs from the cache based on user grants.
     """
+    populate_mock_vms()
     allowed_vms = []
     
     for key, cached_vm in VM_CACHE.items():
@@ -219,60 +313,80 @@ def list_allowed_vms(user_role: str, user_grants: List[VMGrant]) -> List[VMInfo]
 
 def execute_vm_action(db: Session, resource_group: str, vm_name: str, action: str, username: str) -> str:
     """
-    Synchronously triggers a VM power action (start, stop/deallocate, restart).
-    Updates cache immediately to transition state and updates to final state after completion.
+    Triggers a VM power action asynchronously in a background thread.
+    Updates cache state to transitioning immediately and returns it,
+    updating to final state upon operation completion.
     """
+    import threading
+    import time
     cache_key = f"{resource_group}/{vm_name}".lower()
-    
-    # Check if VM is in cache
-    if cache_key not in VM_CACHE:
-        # Create a basic cache placeholder if not present (shouldn't happen)
-        VM_CACHE[cache_key] = {
-            "name": vm_name,
-            "resource_group": resource_group,
-            "location": "Unknown",
-            "size": "Unknown",
-            "power_state": "Unknown"
-        }
     
     # 1. Update transitional state in cache immediately
     if action == "start":
-        VM_CACHE[cache_key]["power_state"] = "Starting"
+        trans_state = "Starting"
     elif action == "stop":
-        VM_CACHE[cache_key]["power_state"] = "Stopping"
+        trans_state = "Stopping"
     elif action == "restart":
-        VM_CACHE[cache_key]["power_state"] = "Restarting"
+        trans_state = "Restarting"
+    else:
+        raise ValueError(f"Invalid action: {action}")
         
+    if cache_key not in VM_CACHE:
+        VM_CACHE[cache_key] = {
+            "name": vm_name,
+            "resource_group": resource_group,
+            "location": "eastus2",
+            "size": "Standard_B2s",
+            "power_state": trans_state
+        }
+    else:
+        VM_CACHE[cache_key]["power_state"] = trans_state
+        
+    # 2. Check if Azure settings are configured
+    is_azure_configured = False
     try:
-        compute_client = get_compute_client(db)
+        db_settings = db.query(AzureSettings).filter(AzureSettings.id == 1).first()
+        if db_settings and db_settings.is_configured:
+            is_azure_configured = True
+    except Exception:
+        pass
         
-        # 2. Execute SDK call
-        if action == "start":
-            poller = compute_client.virtual_machines.begin_start(resource_group, vm_name)
-            poller.result()  # Wait for operation to complete
-        elif action == "stop":
-            # stop = begin_deallocate to release billing
-            poller = compute_client.virtual_machines.begin_deallocate(resource_group, vm_name)
-            poller.result()
-        elif action == "restart":
-            # Restart only works if VM is running. Let's make sure the client-side check is backed by SDK call
-            poller = compute_client.virtual_machines.begin_restart(resource_group, vm_name)
-            poller.result()
-        else:
-            raise ValueError(f"Invalid action: {action}")
-            
-        # 3. Query final status and update cache
-        final_state = fetch_single_vm_status(compute_client, resource_group, vm_name)
-        VM_CACHE[cache_key]["power_state"] = final_state
-        return final_state
+    if is_azure_configured:
+        # Run real Azure call in background
+        def run_azure_async():
+            try:
+                from app.database import SessionLocal
+                local_db = SessionLocal()
+                try:
+                    compute_client = get_compute_client(local_db)
+                    if action == "start":
+                        poller = compute_client.virtual_machines.begin_start(resource_group, vm_name)
+                    elif action == "stop":
+                        poller = compute_client.virtual_machines.begin_deallocate(resource_group, vm_name)
+                    elif action == "restart":
+                        poller = compute_client.virtual_machines.begin_restart(resource_group, vm_name)
+                    poller.result()
+                    
+                    final_state = fetch_single_vm_status(compute_client, resource_group, vm_name)
+                    VM_CACHE[cache_key]["power_state"] = final_state
+                finally:
+                    local_db.close()
+            except Exception as ex:
+                logger.error(f"Async VM action {action} failed for {resource_group}/{vm_name}: {str(ex)}")
+                VM_CACHE[cache_key]["power_state"] = "Unknown"
         
-    except Exception as e:
-        # Reset cache to Unknown or try to fetch actual state to recover from transition state on failure
-        logger.error(f"Failed to execute {action} on {resource_group}/{vm_name}: {str(e)}")
-        try:
-            compute_client = get_compute_client(db)
-            final_state = fetch_single_vm_status(compute_client, resource_group, vm_name)
-            VM_CACHE[cache_key]["power_state"] = final_state
-        except Exception:
-            VM_CACHE[cache_key]["power_state"] = "Unknown"
-        raise e
+        threading.Thread(target=run_azure_async, daemon=True).start()
+    else:
+        # Run mock delay (6 seconds transition) in background
+        def run_mock_async():
+            time.sleep(6)
+            if action == "start":
+                VM_CACHE[cache_key]["power_state"] = "Running"
+            elif action == "stop":
+                VM_CACHE[cache_key]["power_state"] = "Stopped (deallocated)"
+            elif action == "restart":
+                VM_CACHE[cache_key]["power_state"] = "Running"
+        
+        threading.Thread(target=run_mock_async, daemon=True).start()
+        
+    return trans_state

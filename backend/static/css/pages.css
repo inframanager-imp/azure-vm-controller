@@ -1,0 +1,221 @@
+/* ===================================================
+   pages.css – shared styles for users / audit / settings
+   Builds on top of vms.css tokens
+   =================================================== */
+
+/* Settings card */
+.settings-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.danger-card {
+  border-color: oklch(0.66 0.14 25 / 0.35);
+}
+
+.settings-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.settings-card-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  letter-spacing: -0.1px;
+}
+
+.settings-card-desc {
+  font-size: 12px;
+  color: var(--text-3);
+  margin-top: 3px;
+}
+
+.settings-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+
+.danger-action {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+/* Shared form grid */
+.pg-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px 16px;
+}
+
+.pg-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.pg-form-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-3);
+}
+
+.pg-form-input,
+.pg-form-select {
+  background-color: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-radius: 7px;
+  padding: 7px 10px;
+  color: var(--text);
+  font-family: inherit;
+  font-size: 13px;
+  outline: none;
+  width: 100%;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.pg-form-input::placeholder { color: var(--text-4); }
+
+.pg-form-input:focus,
+.pg-form-select:focus {
+  border-color: var(--accent);
+  background-color: var(--surface-2);
+}
+
+.pg-form-select {
+  appearance: none;
+  cursor: pointer;
+}
+
+.pg-form-error {
+  font-size: 12px;
+  color: var(--red);
+  min-height: 16px;
+  margin-top: 8px;
+}
+
+/* Toggle */
+.pg-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  margin-top: 4px;
+}
+.pg-toggle input { display: none; }
+.pg-toggle-track {
+  width: 36px; height: 20px;
+  background: var(--surface-2);
+  border: 1px solid var(--border-strong);
+  border-radius: 99px;
+  position: relative;
+  transition: background 0.2s, border-color 0.2s;
+}
+.pg-toggle input:checked + .pg-toggle-track {
+  background: var(--accent-bd);
+  border-color: var(--accent);
+}
+.pg-toggle-thumb {
+  width: 14px; height: 14px;
+  background: var(--text-3);
+  border-radius: 50%;
+  position: absolute;
+  top: 2px; left: 2px;
+  transition: transform 0.2s, background 0.2s;
+}
+.pg-toggle input:checked + .pg-toggle-track .pg-toggle-thumb {
+  transform: translateX(16px);
+  background: var(--accent);
+}
+.pg-toggle-text { font-size: 12px; font-weight: 500; color: var(--text-3); }
+
+/* Role / result badge */
+.role-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+.role-badge.admin {
+  background: oklch(0.72 0.085 162 / 0.12);
+  border: 1px solid oklch(0.72 0.085 162 / 0.28);
+  color: var(--accent);
+}
+.role-badge.user {
+  background: oklch(0.70 0.085 235 / 0.10);
+  border: 1px solid oklch(0.70 0.085 235 / 0.22);
+  color: var(--blue);
+}
+
+.result-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+.result-badge.success {
+  background: oklch(0.74 0.10 158 / 0.12);
+  border: 1px solid oklch(0.74 0.10 158 / 0.25);
+  color: var(--run);
+}
+.result-badge.failed {
+  background: oklch(0.66 0.14 25 / 0.10);
+  border: 1px solid oklch(0.66 0.14 25 / 0.22);
+  color: var(--red);
+}
+
+/* Status badge */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  font-weight: 500;
+}
+.status-badge.active { color: var(--run); }
+.status-badge.inactive { color: var(--text-4); }
+
+/* Timestamp mono */
+.ts-mono {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  color: var(--text-3);
+}
+
+/* Header right with btn-primary */
+.header-right .btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  font-size: 13px;
+}
+
+@media (max-width: 640px) {
+  .pg-form-grid { grid-template-columns: 1fr; }
+  .danger-action { flex-direction: column; align-items: flex-start; }
+}

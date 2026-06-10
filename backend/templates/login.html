@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login · GYAN</title>
+  <!-- Google Fonts: IBM Plex Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: oklch(0.175 0.005 248);
+      --surface: oklch(0.205 0.006 248);
+      --hover: oklch(0.232 0.007 248);
+      --border: oklch(1 0 0 / 0.085);
+      --border-strong: oklch(1 0 0 / 0.15);
+      --text: oklch(0.95 0.004 248);
+      --text-dim: oklch(0.72 0.008 248);
+      --text-muted: oklch(0.45 0.008 248);
+      --accent: oklch(0.72 0.085 162);
+      --accent-hover: oklch(0.76 0.090 162);
+      --accent-bg: oklch(0.72 0.085 162 / 0.15);
+      --red: oklch(0.66 0.14 25);
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      font-size: 13px;
+      line-height: 1.5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 24px;
+    }
+    
+    .login-container {
+      width: 100%;
+      max-width: 380px;
+      background-color: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 32px;
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
+    }
+    
+    .brand {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 32px;
+    }
+    
+    .brand-logo {
+      width: 24px;
+      height: 24px;
+      border: 2px solid var(--accent);
+      border-radius: 6px;
+      margin-bottom: 12px;
+      position: relative;
+    }
+    .brand-logo::after {
+      content: '';
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      background-color: var(--accent);
+      border-radius: 50%;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+    
+    .brand-title {
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: -0.2px;
+      color: var(--text);
+    }
+    
+    .form-group {
+      margin-bottom: 20px;
+      position: relative;
+    }
+    
+    .form-label {
+      display: block;
+      font-size: 11px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-dim);
+      margin-bottom: 6px;
+    }
+    
+    .form-input {
+      width: 100%;
+      background-color: oklch(0.15 0.005 248);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 10px 12px;
+      color: var(--text);
+      font-family: inherit;
+      font-size: 13px;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+      outline: none;
+    }
+    
+    .form-input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px var(--accent-bg);
+    }
+    
+    .btn-submit {
+      width: 100%;
+      background-color: var(--accent);
+      border: 1px solid transparent;
+      border-radius: 6px;
+      padding: 10px 16px;
+      color: oklch(0.15 0.005 248);
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.15s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    
+    .btn-submit:hover {
+      background-color: var(--accent-hover);
+    }
+    
+    .btn-submit:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    
+    .error-banner {
+      background-color: oklch(0.25 0.08 25 / 0.15);
+      border: 1px solid oklch(0.66 0.14 25 / 0.3);
+      color: var(--red);
+      padding: 10px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      margin-bottom: 20px;
+      display: none;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    /* Simple spinner */
+    .spinner {
+      width: 14px;
+      height: 14px;
+      border: 2px solid oklch(0.15 0.005 248 / 0.3);
+      border-top-color: oklch(0.15 0.005 248);
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+      display: none;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <div class="brand">
+      <div class="brand-logo"></div>
+      <div class="brand-title">GYAN Console</div>
+    </div>
+    
+    <div class="error-banner" id="errorBanner">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+      <span id="errorMessage">Invalid credentials</span>
+    </div>
+    
+    <form id="loginForm">
+      <div class="form-group">
+        <label for="username" class="form-label">Username</label>
+        <input type="text" id="username" class="form-input" required autocomplete="username" placeholder="e.g. admin">
+      </div>
+      
+      <div class="form-group">
+        <label for="password" class="form-label">Password</label>
+        <input type="password" id="password" class="form-input" required autocomplete="current-password" placeholder="••••••••">
+      </div>
+      
+      <button type="submit" class="btn-submit" id="btnSubmit">
+        <span class="spinner" id="spinner"></span>
+        <span id="btnText">Sign in</span>
+      </button>
+    </form>
+  </div>
+
+  <script src="/static/js/login.js"></script>
+</body>
+</html>

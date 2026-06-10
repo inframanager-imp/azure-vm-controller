@@ -53,6 +53,8 @@ def run_scheduled_job(schedule_id: int):
             
         logger.info(f"Executing schedule '{schedule.name}' (ID: {schedule.id})")
         action = schedule.action.lower()  # "start" or "stop"
+        # Human-readable action label (matches manual action labels in audit log)
+        action_label = "stop (deallocate)" if action == "stop" else "start"
         
         if schedule.target_type == "vm":
             # Target is a single VM
@@ -68,7 +70,7 @@ def run_scheduled_job(schedule_id: int):
                 log = AuditLog(
                     username="scheduler",
                     vm_name=schedule.vm_name,
-                    action=f"{action} (schedule)",
+                    action=f"{action_label} [schedule]",
                     result="success"
                 )
                 db.add(log)
@@ -78,7 +80,7 @@ def run_scheduled_job(schedule_id: int):
                 log = AuditLog(
                     username="scheduler",
                     vm_name=schedule.vm_name,
-                    action=f"{action} (schedule)",
+                    action=f"{action_label} [schedule]",
                     result=f"failed: {str(e)}"
                 )
                 db.add(log)
@@ -95,7 +97,7 @@ def run_scheduled_job(schedule_id: int):
                 log = AuditLog(
                     username="scheduler",
                     vm_name=f"RG:{schedule.resource_group}",
-                    action=f"{action} (schedule)",
+                    action=f"{action_label} [schedule]",
                     result=f"failed: Could not list VMs in resource group: {str(e)}"
                 )
                 db.add(log)
@@ -106,7 +108,7 @@ def run_scheduled_job(schedule_id: int):
                 log = AuditLog(
                     username="scheduler",
                     vm_name=f"RG:{schedule.resource_group}",
-                    action=f"{action} (schedule)",
+                    action=f"{action_label} [schedule]",
                     result="success: No VMs found in Resource Group"
                 )
                 db.add(log)
@@ -125,7 +127,7 @@ def run_scheduled_job(schedule_id: int):
                     log = AuditLog(
                         username="scheduler",
                         vm_name=vm.name,
-                        action=f"{action} (schedule)",
+                        action=f"{action_label} [schedule]",
                         result="success"
                     )
                     db.add(log)
@@ -134,7 +136,7 @@ def run_scheduled_job(schedule_id: int):
                     log = AuditLog(
                         username="scheduler",
                         vm_name=vm.name,
-                        action=f"{action} (schedule)",
+                        action=f"{action_label} [schedule]",
                         result=f"failed: {str(e)}"
                     )
                     db.add(log)

@@ -1,0 +1,285 @@
+/* ============================================================
+   schedules2.css — redesigned Auto Start/Stop schedules page
+   ============================================================ */
+
+/* Table column sizing */
+.col-time   { width: 100px; text-align: center; }
+.col-days   { min-width: 220px; }
+.col-tz     { width: 150px; }
+.col-sstatus { width: 110px; }
+.col-sact   { width: 140px; }
+
+/* Center time cells */
+.data-table td.time-cell { text-align: center; font-family: 'IBM Plex Mono', monospace; font-size: 13px; font-weight: 600; color: var(--text); }
+
+/* Days pills */
+.days-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.day-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 22px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+  background: oklch(0.72 0.085 162 / 0.12);
+  border: 1px solid oklch(0.72 0.085 162 / 0.25);
+  color: var(--accent);
+}
+.day-pill.daily {
+  width: auto;
+  padding: 0 8px;
+  background: oklch(0.70 0.06 248 / 0.10);
+  border-color: oklch(0.70 0.06 248 / 0.22);
+  color: var(--text-3);
+}
+
+/* Status badge */
+.sched-enabled-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  padding: 3px 9px;
+  border-radius: 4px;
+}
+.sched-enabled-badge.on {
+  background: oklch(0.74 0.10 158 / 0.12);
+  border: 1px solid oklch(0.74 0.10 158 / 0.30);
+  color: var(--run);
+}
+.sched-enabled-badge.off {
+  background: oklch(0.50 0.005 248 / 0.15);
+  border: 1px solid oklch(0.50 0.005 248 / 0.25);
+  color: var(--text-4);
+}
+
+/* Instance cell */
+.inst-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.inst-name {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text);
+}
+.inst-rg {
+  font-size: 11px;
+  color: var(--text-4);
+}
+
+/* Row action buttons */
+.row-action-btns {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+}
+.btn-row-edit {
+  padding: 4px 12px;
+  background: oklch(0.72 0.085 162 / 0.15);
+  border: 1px solid oklch(0.72 0.085 162 / 0.35);
+  color: var(--accent);
+  border-radius: 5px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+.btn-row-edit:hover {
+  background: oklch(0.72 0.085 162 / 0.25);
+  border-color: var(--accent);
+}
+.btn-row-delete {
+  padding: 4px 12px;
+  background: oklch(0.66 0.14 25 / 0.12);
+  border: 1px solid oklch(0.66 0.14 25 / 0.30);
+  color: var(--red);
+  border-radius: 5px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+.btn-row-delete:hover {
+  background: oklch(0.66 0.14 25 / 0.22);
+  border-color: var(--red);
+}
+
+/* ── Inline Form Panel ── */
+.sched-form-panel {
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-radius: 9px;
+  padding: 24px 28px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  flex-shrink: 0;
+  animation: slideDown 0.18s ease;
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.sched-form-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: -0.2px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.sched-form-row {
+  display: flex;
+  gap: 16px;
+  align-items: flex-end;
+  flex-wrap: wrap;
+}
+
+.sched-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+  min-width: 140px;
+}
+
+.sched-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--text-3);
+}
+
+.sched-hint {
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: 0;
+  color: var(--text-4);
+  font-size: 10px;
+}
+
+.sched-input,
+.sched-select {
+  background: var(--surface-2);
+  border: 1px solid var(--border-strong);
+  border-radius: 7px;
+  padding: 8px 11px;
+  color: var(--text);
+  font-family: inherit;
+  font-size: 13px;
+  outline: none;
+  width: 100%;
+  transition: border-color 0.15s ease;
+  cursor: pointer;
+}
+.sched-input:focus,
+.sched-select:focus { border-color: var(--accent); background: oklch(0.21 0.006 248); }
+.sched-select { appearance: none; }
+.sched-select option { background: oklch(0.20 0.006 248); }
+
+/* Time input styling */
+input[type="time"].sched-input {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--accent);
+  cursor: text;
+}
+input[type="time"]::-webkit-calendar-picker-indicator {
+  filter: invert(0.6);
+  cursor: pointer;
+}
+
+/* Days of week checkboxes */
+.days-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 20px;
+  padding: 10px 0 2px;
+}
+.day-check {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-2);
+  cursor: pointer;
+  user-select: none;
+  transition: color 0.12s;
+}
+.day-check:hover { color: var(--text); }
+.day-check input[type="checkbox"] {
+  appearance: none;
+  width: 15px;
+  height: 15px;
+  border: 1.5px solid var(--border-strong);
+  border-radius: 3px;
+  background: var(--surface-2);
+  cursor: pointer;
+  position: relative;
+  flex-shrink: 0;
+  transition: background 0.12s, border-color 0.12s;
+}
+.day-check input[type="checkbox"]:checked {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+.day-check input[type="checkbox"]:checked::after {
+  content: '';
+  position: absolute;
+  left: 3px; top: 1px;
+  width: 6px; height: 10px;
+  border: 2px solid #000;
+  border-top: none;
+  border-left: none;
+  transform: rotate(45deg);
+}
+
+/* Form footer */
+.sched-form-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding-top: 4px;
+  border-top: 1px solid var(--border);
+}
+
+.sched-error {
+  font-size: 12px;
+  color: var(--red);
+  min-height: 14px;
+  margin-top: -6px;
+}
+
+/* Buttons in form */
+.sched-form-actions .btn-primary { padding: 8px 22px; font-size: 13px; }
+.sched-form-actions .btn-ghost   { padding: 8px 18px; font-size: 13px; }
+
+/* Target type label in table */
+.target-label-sm {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  color: var(--text-4);
+  margin-bottom: 2px;
+}

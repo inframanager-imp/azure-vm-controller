@@ -34,6 +34,34 @@ def check_action_permission(user: User, resource_group: str, vm_name: str, actio
         
     return False
 
+def get_stable_uptime(vm_name: str, power_state: str) -> str:
+    if "running" not in power_state.lower():
+        return "—"
+    uptimes = {
+        "automation-test": "5d 12h",
+        "cwb-app-dev": "3d 1h",
+        "cwb-apps-01": "6d 9h",
+        "gyan-engine-das-2": "11d 7h",
+        "gyan-engine-das-3": "11d 7h",
+        "gyan-engine-demo-1": "1d 18h",
+        "nda-ds-server-v2": "19d 5h",
+        "rapid-gyan-engine-2": "2d 4h",
+        "relevance-benchmarking-01": "8h",
+        "workbench": "34d 2h"
+    }
+    return uptimes.get(vm_name.lower(), "2d 6h")
+
+def get_schedule_time(cron_str: str) -> str:
+    parts = cron_str.split()
+    if len(parts) >= 2:
+        try:
+            minute = int(parts[0])
+            hour = int(parts[1])
+            return f"{hour:02d}:{minute:02d}"
+        except ValueError:
+            pass
+    return "19:00"
+
 @router.get("", response_model=List[VMInfo])
 def get_vms(
     current_user: User = Depends(get_current_user),
@@ -42,8 +70,36 @@ def get_vms(
     """
     Retrieves all virtual machines the caller is authorized to view.
     Reads from the background VM status cache to prevent ARM rate-limiting.
+    Enriches with active VM schedules and uptime mock values.
     """
-    return list_allowed_vms(current_user.role, current_user.grants)
+    from app.models import Schedule
+    schedules = db.query(Schedule).filter(Schedule.is_enabled == True).all()
+    
+    vm_schedules = {}
+    rg_schedules = {}
+    for s in schedules:
+        if s.target_type == "vm" and s.vm_name:
+            vm_schedules[(s.resource_group.lower(), s.vm_name.lower())] = s
+        elif s.target_type == "rg":
+            rg_schedules[s.resource_group.lower()] = s
+            
+    vms_list = list_allowed_vms(current_user.role, current_user.grants)
+    
+    for vm in vms_list:
+        sched = vm_schedules.get((vm.resource_group.lower(), vm.name.lower()))
+        if not sched:
+            sched = rg_schedules.get(vm.resource_group.lower())
+            
+        if sched and sched.action == "stop":
+            time_str = get_schedule_time(sched.cron_expression)
+            vm.schedule = f"auto-stop {time_str}"
+        elif sched and sched.action == "start":
+            time_str = get_schedule_time(sched.cron_expression)
+            vm.schedule = f"auto-start {time_str}"
+            
+        vm.uptime = get_stable_uptime(vm.name, vm.power_state)
+        
+    return vms_list
 
 @router.post("/refresh")
 def force_refresh_cache(
@@ -228,3 +284,66 @@ def restart_virtual_machine(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to restart VM: {str(e)}"
         )
+
+@router.get("/{rg}/{name}/status")
+def get_vm_status(
+    rg: str,
+    name: str,
+    current_user: User = Depends(get_current_user)
+):
+    """
+    Returns the current cached power state of the VM.
+    Enforces user permission checks.
+    """
+    if current_user.role != "admin":
+        permissions = check_user_grant(current_user.role, current_user.grants, rg, name)
+        if not permissions:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail=f"Access denied to VM {name} in resource group {rg}."
+            )
+            
+    cache_key = f"{rg}/{name}".lower()
+    if cache_key in VM_CACHE:
+        return {"status": "success", "power_state": VM_CACHE[cache_key]["power_state"]}
+    else:
+        from app.azure_client import populate_mock_vms
+        populate_mock_vms()
+        if cache_key in VM_CACHE:
+            return {"status": "success", "power_state": VM_CACHE[cache_key]["power_state"]}
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="VM not found in cache."
+        )
+
+@router.get("/{rg}/{name}/metrics")
+def get_vm_metrics(
+    rg: str,
+    name: str,
+    current_user: User = Depends(get_current_user)
+):
+    """
+    Returns mock CPU, Memory, and Network I/O metrics for the VM detail drawer.
+    """
+    if current_user.role != "admin":
+        permissions = check_user_grant(current_user.role, current_user.grants, rg, name)
+        if not permissions:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail=f"Access denied."
+            )
+            
+    import random
+    seed_val = sum(ord(c) for c in name)
+    random.seed(seed_val)
+    
+    cpu = [random.randint(2, 45) for _ in range(15)]
+    memory = [random.randint(35, 78) for _ in range(15)]
+    network = [random.randint(5, 320) for _ in range(15)]
+    
+    return {
+        "status": "success",
+        "cpu": cpu,
+        "memory": memory,
+        "network": network
+    }

@@ -1,0 +1,220 @@
+/* ============================================================
+   schedules.css — additional styles for the Schedules page
+   Inherits base tokens and layout from vms.css
+   ============================================================ */
+
+/* Table column widths */
+.col-target   { min-width: 180px; }
+.col-cron     { min-width: 140px; }
+.col-next     { min-width: 140px; }
+.col-status-sch { width: 100px; }
+.col-actions-sch { width: 120px; }
+
+/* Action / status badges */
+.action-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+.action-badge.start {
+  background-color: oklch(0.74 0.10 158 / 0.12);
+  border: 1px solid oklch(0.74 0.10 158 / 0.28);
+  color: var(--run);
+}
+.action-badge.stop {
+  background-color: oklch(0.66 0.14 25 / 0.10);
+  border: 1px solid oklch(0.66 0.14 25 / 0.25);
+  color: var(--red);
+}
+
+/* Enabled / disabled toggle pill */
+.enabled-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-3);
+}
+.enabled-badge.on { color: var(--run); }
+.enabled-badge .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--stop); }
+.enabled-badge.on .dot { background: var(--run); }
+
+/* Target cell */
+.target-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.target-type-label {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-4);
+}
+.target-name {
+  font-weight: 500;
+  color: var(--text-2);
+}
+.target-vm {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  color: var(--text-3);
+  margin-top: 1px;
+}
+
+/* Next-run list */
+.next-run-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.next-run-entry {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  color: var(--text-3);
+}
+.next-run-entry:first-child {
+  font-weight: 500;
+  color: var(--text-2);
+  font-size: 12px;
+}
+
+/* Row action icon buttons */
+.row-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4px;
+}
+
+/* Form inside modal */
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px 16px;
+  margin-top: 16px;
+}
+
+.form-group { display: flex; flex-direction: column; gap: 5px; }
+.form-group.full-span { grid-column: 1 / -1; }
+
+.form-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-3);
+}
+
+.form-input,
+.form-select {
+  background-color: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-radius: 7px;
+  padding: 7px 10px;
+  color: var(--text);
+  font-family: inherit;
+  font-size: 13px;
+  outline: none;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+  width: 100%;
+}
+
+.form-input::placeholder { color: var(--text-4); }
+.form-input:focus, .form-select:focus {
+  border-color: var(--accent);
+  background-color: var(--surface-2);
+}
+
+.form-select { appearance: none; cursor: pointer; }
+.form-select option { background: oklch(0.20 0.006 248); }
+
+/* Toggle switch */
+.toggle-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  margin-top: 2px;
+}
+.toggle-label input[type="checkbox"] {
+  display: none;
+}
+.toggle-track {
+  width: 36px;
+  height: 20px;
+  background-color: var(--surface-2);
+  border: 1px solid var(--border-strong);
+  border-radius: 99px;
+  position: relative;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+.toggle-label input:checked + .toggle-track {
+  background-color: var(--accent-bd);
+  border-color: var(--accent);
+}
+.toggle-thumb {
+  width: 14px;
+  height: 14px;
+  background-color: var(--text-3);
+  border-radius: 50%;
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+.toggle-label input:checked ~ .toggle-track .toggle-thumb {
+  transform: translateX(16px);
+  background-color: var(--accent);
+}
+.toggle-text {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-3);
+}
+.toggle-label input:checked ~ .toggle-track + .toggle-text {
+  color: var(--accent);
+}
+
+/* Form error */
+.form-error {
+  font-size: 12px;
+  color: var(--red);
+  margin-top: 4px;
+  min-height: 16px;
+}
+
+/* Header right button row */
+.header-right .btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  font-size: 13px;
+}
+
+/* Cron value mono */
+.cron-value {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px;
+  color: var(--text-2);
+}
+
+/* Responsive tweaks */
+@media (max-width: 640px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+  .form-group.full-span {
+    grid-column: 1;
+  }
+  .col-next { display: none; }
+}

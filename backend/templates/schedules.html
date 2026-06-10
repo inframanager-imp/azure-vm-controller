@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Schedules · GYAN</title>
+  <meta name="description" content="Auto start/stop schedules for Azure VMs">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/vms.css">
+  <link rel="stylesheet" href="/static/css/schedules2.css">
+</head>
+<body>
+<div class="app-container">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-header"><div class="brand-icon"></div><span class="brand-name">GYAN</span></div>
+    <nav class="sidebar-menu">
+      <div class="menu-group">
+        <div class="menu-group-title">Compute</div>
+        <div class="menu-items">
+          <a href="/dashboard" class="menu-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg>
+            <span>Virtual machines</span>
+          </a>
+          <a href="/schedules" class="menu-item active">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            <span>Schedules</span>
+          </a>
+        </div>
+      </div>
+      <div class="menu-group">
+        <div class="menu-group-title">Admin</div>
+        <div class="menu-items">
+          <a href="/users" class="menu-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            <span>Users</span>
+          </a>
+          <a href="/audit" class="menu-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+            <span>Audit logs</span>
+          </a>
+          <a href="/settings" class="menu-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06.06A1.65 1.65 0 0 0 4.6 9z"/></svg>
+            <span>Settings</span>
+          </a>
+        </div>
+      </div>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="user-profile">
+        <div class="user-avatar" id="userAvatar">U</div>
+        <div class="user-info">
+          <span class="user-name" id="userName">User</span>
+          <span class="user-role" id="userRole">Administrator</span>
+        </div>
+      </div>
+      <button class="btn-signout" id="btnSignout">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        <span>Sign out</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <header class="header">
+      <div class="header-left">
+        <h1 class="header-title">Auto Start / Stop Schedules</h1>
+        <p class="header-subtitle" id="headerSubtitle">Automated power schedules for Azure VMs</p>
+      </div>
+      <div class="header-right">
+        <button class="btn-primary" id="btnAddNew">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="13" height="13"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Add Schedule
+        </button>
+      </div>
+    </header>
+
+    <div class="scroll-container">
+      <!-- Schedules Table -->
+      <section class="table-card" aria-label="Schedules">
+        <table class="data-table" id="schedulesTable">
+          <thead>
+            <tr>
+              <th>Instance</th>
+              <th class="col-time">Start Time</th>
+              <th class="col-time">Stop Time</th>
+              <th class="col-days">Days</th>
+              <th class="col-tz">Timezone</th>
+              <th class="col-sstatus">Status</th>
+              <th class="col-sact" style="text-align:right;">Action</th>
+            </tr>
+          </thead>
+          <tbody id="schedulesBody">
+            <tr class="skeleton-row"><td><div class="skeleton-text name"></div></td><td><div class="skeleton-text status"></div></td><td><div class="skeleton-text status"></div></td><td><div class="skeleton-text size"></div></td><td><div class="skeleton-text status"></div></td><td><div class="skeleton-text status"></div></td><td><div class="skeleton-text actions"></div></td></tr>
+            <tr class="skeleton-row"><td><div class="skeleton-text name"></div></td><td><div class="skeleton-text status"></div></td><td><div class="skeleton-text status"></div></td><td><div class="skeleton-text size"></div></td><td><div class="skeleton-text status"></div></td><td><div class="skeleton-text status"></div></td><td><div class="skeleton-text actions"></div></td></tr>
+          </tbody>
+        </table>
+        <div class="empty-state" id="emptyState">
+          <svg class="empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          <h3 class="empty-title">No schedules configured</h3>
+          <p class="empty-desc">Click "Add Schedule" to create an auto start/stop schedule for a VM.</p>
+        </div>
+      </section>
+
+      <!-- Inline Edit / Create Form Panel -->
+      <section class="sched-form-panel" id="schedFormPanel" style="display:none;">
+        <div class="sched-form-title" id="schedFormTitle">Add Schedule</div>
+
+        <!-- Row 1: Target type + Instance -->
+        <div class="sched-form-row">
+          <div class="sched-field" style="flex:0 0 160px;">
+            <label class="sched-label">Target</label>
+            <select class="sched-select" id="fTargetType">
+              <option value="vm">Specific VM</option>
+              <option value="rg">Resource Group (all VMs)</option>
+            </select>
+          </div>
+          <div class="sched-field" style="flex:1;" id="fInstanceWrap">
+            <label class="sched-label">Instance</label>
+            <select class="sched-select" id="fInstance">
+              <option value="">— loading VMs… —</option>
+            </select>
+          </div>
+          <div class="sched-field" style="flex:1;" id="fRgWrap" hidden>
+            <label class="sched-label">Resource Group</label>
+            <select class="sched-select" id="fRg">
+              <option value="">— loading… —</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Row 2: Start + Stop time -->
+        <div class="sched-form-row">
+          <div class="sched-field">
+            <label class="sched-label">Start Time (HH:MM)</label>
+            <input type="time" class="sched-input" id="fStartTime" value="09:00">
+          </div>
+          <div class="sched-field">
+            <label class="sched-label">Stop Time (HH:MM)</label>
+            <input type="time" class="sched-input" id="fStopTime" value="21:00">
+          </div>
+        </div>
+
+        <!-- Row 3: Days of week -->
+        <div class="sched-field">
+          <label class="sched-label">Days of Week <span class="sched-hint">(leave all unchecked = every day)</span></label>
+          <div class="days-row">
+            <label class="day-check"><input type="checkbox" value="1" checked> Monday</label>
+            <label class="day-check"><input type="checkbox" value="2" checked> Tuesday</label>
+            <label class="day-check"><input type="checkbox" value="3" checked> Wednesday</label>
+            <label class="day-check"><input type="checkbox" value="4" checked> Thursday</label>
+            <label class="day-check"><input type="checkbox" value="5" checked> Friday</label>
+            <label class="day-check"><input type="checkbox" value="6"> Saturday</label>
+            <label class="day-check"><input type="checkbox" value="0"> Sunday</label>
+          </div>
+        </div>
+
+        <!-- Row 4: Timezone + Enabled -->
+        <div class="sched-form-row">
+          <div class="sched-field" style="flex:1;">
+            <label class="sched-label">Timezone</label>
+            <select class="sched-select" id="fTimezone">
+              <option value="Asia/Kolkata" selected>Asia/Kolkata (IST)</option>
+              <option value="UTC">UTC</option>
+              <option value="America/New_York">America/New_York (ET)</option>
+              <option value="America/Los_Angeles">America/Los_Angeles (PT)</option>
+              <option value="Europe/London">Europe/London (GMT)</option>
+              <option value="Europe/Berlin">Europe/Berlin (CET)</option>
+            </select>
+          </div>
+          <div class="sched-field" style="flex:0 0 140px;">
+            <label class="sched-label">Enabled</label>
+            <select class="sched-select" id="fEnabled">
+              <option value="yes" selected>Yes</option>
+              <option value="no">No</option>
+            </select>
+          </div>
+        </div>
+
+        <p class="sched-error" id="schedError"></p>
+
+        <!-- Buttons -->
+        <div class="sched-form-actions">
+          <button class="btn-primary" id="btnSaveSched">Save</button>
+          <button class="btn-ghost" id="btnCancelSched">Cancel</button>
+        </div>
+      </section>
+    </div>
+  </main>
+</div>
+
+<!-- Delete confirmation -->
+<div class="modal-overlay" id="deleteModal" role="dialog" aria-modal="true">
+  <div class="modal">
+    <div class="modal-body">
+      <h2 class="modal-title">Delete Schedule</h2>
+      <p class="modal-desc" id="deleteDesc">Delete this schedule? This cannot be undone.</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-ghost" id="btnDelCancel">Cancel</button>
+      <button class="btn-danger" id="btnDelConfirm">Delete</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-container" id="toastContainer" aria-live="assertive"></div>
+<script src="/static/js/schedules2.js?v=1"></script>
+</body>
+</html>

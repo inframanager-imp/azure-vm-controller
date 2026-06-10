@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Virtual machines · GYAN</title>
+  <!-- Google Fonts: IBM Plex Sans (UI) + IBM Plex Mono (IDs/Uptimes) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <!-- CSS Stylesheet -->
+  <link rel="stylesheet" href="/static/css/vms.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="brand-icon"></div>
+        <span class="brand-name">GYAN</span>
+      </div>
+      
+      <nav class="sidebar-menu">
+        <div class="menu-group">
+          <div class="menu-group-title">Compute</div>
+          <div class="menu-items">
+            <a href="/dashboard" class="menu-item active">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9"></rect><rect x="14" y="3" width="7" height="5"></rect><rect x="14" y="12" width="7" height="9"></rect><rect x="3" y="16" width="7" height="5"></rect></svg>
+              <span>Virtual machines</span>
+            </a>
+            <a href="/schedules" class="menu-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+              <span>Schedules</span>
+            </a>
+          </div>
+        </div>
+
+        <div class="menu-group">
+          <div class="menu-group-title">Admin</div>
+          <div class="menu-items">
+            <a href="/users" class="menu-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+              <span>Users</span>
+            </a>
+            <a href="/audit" class="menu-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+              <span>Audit logs</span>
+            </a>
+            <a href="/settings" class="menu-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+              <span>Settings</span>
+            </a>
+          </div>
+        </div>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="user-profile">
+          <div class="user-avatar" id="userAvatar">U</div>
+          <div class="user-info">
+            <span class="user-name" id="userName">User</span>
+            <span class="user-role" id="userRole">Administrator</span>
+          </div>
+        </div>
+        <button class="btn-signout" id="btnSignout">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+          <span>Sign out</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+      <!-- Header -->
+      <header class="header">
+        <div class="header-left">
+          <h1 class="header-title">Virtual machines</h1>
+          <p class="header-subtitle" id="headerSubtitle">Loading resources...</p>
+        </div>
+        <div class="header-right">
+          <span class="sync-status" id="syncStatus">Last synced just now</span>
+          <div class="connection-pill">
+            <span class="dot green"></span>
+            <span>Azure connected</span>
+          </div>
+        </div>
+      </header>
+
+      <!-- Scrollable body wrapper -->
+      <div class="scroll-container">
+        <!-- KPI Strip -->
+        <section class="kpi-strip" aria-label="Key Performance Indicators">
+          <div class="kpi-cell">
+            <div class="kpi-header">Total resources</div>
+            <div class="kpi-value" id="kpiTotal">—</div>
+          </div>
+          <div class="kpi-cell">
+            <div class="kpi-header">
+              <span class="dot green"></span>
+              <span>Running</span>
+            </div>
+            <div class="kpi-value" id="kpiRunning">—</div>
+          </div>
+          <div class="kpi-cell">
+            <div class="kpi-header">
+              <span class="dot grey"></span>
+              <span>Deallocated</span>
+            </div>
+            <div class="kpi-value" id="kpiDeallocated">—</div>
+          </div>
+        </section>
+
+        <!-- Command Bar -->
+        <section class="command-bar" aria-label="Command Bar">
+          <div class="command-left" id="commandLeftDefault">
+            <button class="btn-ghost" id="btnSync">
+              <svg class="icon-sync" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 4v6h-6"></path><path d="M1 20v-6h6"></path><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
+              <span>Sync Azure</span>
+            </button>
+          </div>
+          <div class="command-left" id="commandLeftSelected" style="display: none;">
+            <span class="selected-count" id="selectedCount">0 selected</span>
+            <button class="btn-ghost" id="btnBulkStart">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+              <span>Start</span>
+            </button>
+            <button class="btn-ghost" id="btnBulkRestart">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path></svg>
+              <span>Restart</span>
+            </button>
+            <button class="btn-ghost" id="btnBulkStop">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect></svg>
+              <span>Stop</span>
+            </button>
+            <button class="btn-ghost" id="btnBulkClear" style="border: none;">
+              <span>Clear</span>
+            </button>
+          </div>
+
+          <div class="command-right">
+            <div class="search-wrapper">
+              <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+              <input type="text" class="search-input" id="searchInput" placeholder="Search name or group...">
+            </div>
+
+            <!-- Resource Group Filter -->
+            <div class="filter-dropdown" id="rgFilterContainer">
+              <button class="btn-ghost" id="btnRgFilter">
+                <span>All resource groups</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="12" height="12"><polyline points="6 9 12 15 18 9"></polyline></svg>
+              </button>
+              <div class="dropdown-menu" id="rgDropdownMenu">
+                <!-- Items populated dynamically -->
+              </div>
+            </div>
+
+            <!-- Status Filter -->
+            <div class="filter-dropdown" id="statusFilterContainer">
+              <button class="btn-ghost" id="btnStatusFilter">
+                <span>All statuses</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="12" height="12"><polyline points="6 9 12 15 18 9"></polyline></svg>
+              </button>
+              <div class="dropdown-menu" id="statusDropdownMenu">
+                <div class="dropdown-item checked" data-value="all">
+                  <span>All</span>
+                  <svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                </div>
+                <div class="dropdown-item" data-value="running">
+                  <span>Running</span>
+                  <svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                </div>
+                <div class="dropdown-item" data-value="deallocated">
+                  <span>Deallocated</span>
+                  <svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                </div>
+                <div class="dropdown-item" data-value="scheduled">
+                  <span>Scheduled</span>
+                  <svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Data Table wrapper -->
+        <section class="table-card" aria-label="Resources table">
+          <table class="data-table" id="vmsTable">
+            <thead>
+              <tr>
+                <th class="col-select">
+                  <input type="checkbox" class="custom-checkbox" id="selectAllCheckbox" aria-label="Select all virtual machines">
+                </th>
+                <th class="col-name sortable" data-sort="name">
+                  <span>Name</span>
+                  <span class="sort-indicator" id="indicator-name">↑</span>
+                </th>
+                <th class="col-status sortable" data-sort="status">
+                  <span>Status</span>
+                  <span class="sort-indicator" id="indicator-status"></span>
+                </th>
+                <th class="col-size">Size</th>
+                <th class="col-region">Region</th>
+                <th class="col-uptime sortable" data-sort="uptime" style="text-align: right;">
+                  <span>Uptime</span>
+                  <span class="sort-indicator" id="indicator-uptime"></span>
+                </th>
+                <th class="col-actions" style="text-align: right;">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="vmsTableBody">
+              <!-- Initial Loading Skeletons -->
+              <tr class="skeleton-row">
+                <td class="col-select"><div class="skeleton-text checkbox"></div></td>
+                <td><div class="skeleton-text name"></div><div class="skeleton-text rg"></div></td>
+                <td><div class="skeleton-text status"></div></td>
+                <td class="col-size"><div class="skeleton-text size"></div></td>
+                <td class="col-region"><div class="skeleton-text region"></div></td>
+                <td class="col-uptime"><div class="skeleton-text uptime"></div></td>
+                <td class="col-actions"><div class="skeleton-text actions"></div></td>
+              </tr>
+              <tr class="skeleton-row">
+                <td class="col-select"><div class="skeleton-text checkbox"></div></td>
+                <td><div class="skeleton-text name"></div><div class="skeleton-text rg"></div></td>
+                <td><div class="skeleton-text status"></div></td>
+                <td class="col-size"><div class="skeleton-text size"></div></td>
+                <td class="col-region"><div class="skeleton-text region"></div></td>
+                <td class="col-uptime"><div class="skeleton-text uptime"></div></td>
+                <td class="col-actions"><div class="skeleton-text actions"></div></td>
+              </tr>
+              <tr class="skeleton-row">
+                <td class="col-select"><div class="skeleton-text checkbox"></div></td>
+                <td><div class="skeleton-text name"></div><div class="skeleton-text rg"></div></td>
+                <td><div class="skeleton-text status"></div></td>
+                <td class="col-size"><div class="skeleton-text size"></div></td>
+                <td class="col-region"><div class="skeleton-text region"></div></td>
+                <td class="col-uptime"><div class="skeleton-text uptime"></div></td>
+                <td class="col-actions"><div class="skeleton-text actions"></div></td>
+              </tr>
+            </tbody>
+          </table>
+
+          <!-- Empty filter view -->
+          <div class="empty-state" id="emptyState">
+            <svg class="empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+            <h3 class="empty-title">No resources match filters</h3>
+            <p class="empty-desc">Adjust your search query or dropdown filter selections and try again.</p>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <!-- Detail Drawer Slide-over -->
+  <div class="drawer-overlay" id="drawerOverlay" aria-modal="true" role="dialog">
+    <div class="drawer" id="detailDrawer">
+      <div class="drawer-header">
+        <div class="drawer-title-group">
+          <h2 class="drawer-title" id="drawerVmName">Workbench</h2>
+          <span class="drawer-subtitle" id="drawerVmRg">cwb-prod</span>
+        </div>
+        <button class="btn-close" id="btnDrawerClose" aria-label="Close details panel">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+      
+      <div class="drawer-body">
+        <!-- Controls Strip -->
+        <div class="drawer-actions">
+          <button class="btn-ghost" id="drawerActionStart" style="justify-content: center;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="12" height="12"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+            <span>Start</span>
+          </button>
+          <button class="btn-ghost" id="drawerActionRestart" style="justify-content: center;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="12" height="12"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path></svg>
+            <span>Restart</span>
+          </button>
+          <button class="btn-ghost" id="drawerActionStop" style="justify-content: center;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="12" height="12"><rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect></svg>
+            <span>Stop</span>
+          </button>
+        </div>
+
+        <!-- Metrics graphs -->
+        <div class="drawer-section">
+          <h3 class="drawer-section-title">Metrics · last hour</h3>
+          <div class="metrics-grid">
+            <!-- CPU -->
+            <div class="metric-card">
+              <div class="metric-info">
+                <span class="metric-label">CPU Utilization</span>
+                <span class="metric-value" id="metricCpu">12.5%</span>
+              </div>
+              <div class="sparkline-wrapper">
+                <svg class="sparkline-svg" id="sparklineCpu">
+                  <!-- Generated dynamically -->
+                </svg>
+              </div>
+            </div>
+            <!-- Memory -->
+            <div class="metric-card">
+              <div class="metric-info">
+                <span class="metric-label">Memory Used</span>
+                <span class="metric-value" id="metricMemory">5.4 GiB</span>
+              </div>
+              <div class="sparkline-wrapper">
+                <svg class="sparkline-svg" id="sparklineMemory">
+                  <!-- Generated dynamically -->
+                </svg>
+              </div>
+            </div>
+            <!-- Network I/O -->
+            <div class="metric-card">
+              <div class="metric-info">
+                <span class="metric-label">Network I/O</span>
+                <span class="metric-value" id="metricNetwork">84.2 KB/s</span>
+              </div>
+              <div class="sparkline-wrapper">
+                <svg class="sparkline-svg" id="sparklineNetwork">
+                  <!-- Generated dynamically -->
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Configuration properties -->
+        <div class="drawer-section">
+          <h3 class="drawer-section-title">Configuration</h3>
+          <div class="config-list">
+            <div class="config-item">
+              <span class="config-label">Status</span>
+              <span class="config-value" id="configStatus">Running</span>
+            </div>
+            <div class="config-item">
+              <span class="config-label">Region</span>
+              <span class="config-value font-mono" id="configRegion">eastus2</span>
+            </div>
+            <div class="config-item">
+              <span class="config-label">Size</span>
+              <span class="config-value font-mono" id="configSize">Standard_D8s_v3</span>
+            </div>
+            <div class="config-item">
+              <span class="config-label">Resource Group</span>
+              <span class="config-value font-mono" id="configRg">cwb-prod</span>
+            </div>
+            <div class="config-item">
+              <span class="config-label">Uptime</span>
+              <span class="config-value font-mono" id="configUptime">34d 2h</span>
+            </div>
+            <div class="config-item">
+              <span class="config-label">Schedule</span>
+              <span class="config-value" id="configSchedule">—</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Activity logs -->
+        <div class="drawer-section">
+          <h3 class="drawer-section-title">Recent Activity</h3>
+          <div class="activity-list" id="drawerActivityList">
+            <!-- Populated dynamically -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Confirmation Modal Dialog -->
+  <div class="modal-overlay" id="confirmModalOverlay" aria-modal="true" role="dialog">
+    <div class="modal">
+      <div class="modal-body">
+        <h2 class="modal-title" id="modalTitle">Confirm Action</h2>
+        <p class="modal-desc" id="modalDesc">Are you sure you want to proceed?</p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-ghost" id="btnModalCancel">Cancel</button>
+        <button class="btn-primary" id="btnModalConfirm">Confirm</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toastContainer" aria-live="assertive">
+    <!-- Toasts generated dynamically -->
+  </div>
+
+  <!-- Vanilla JavaScript -->
+  <script src="/static/js/vms.js?v=2"></script>
+</body>
+</html>
