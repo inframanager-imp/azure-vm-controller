@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (!token) { window.location.href = '/login'; return; }
 
   let users = [], editingId = null, deletingId = null;
+  let azureVmsMap = {}; // Maps resource_group -> array of vm names
 
   const $ = id => document.getElementById(id);
   const userAvatar = $('userAvatar'), userName = $('userName'), userRole = $('userRole');
@@ -17,6 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const pwNote = $('pwNote'), userFormError = $('userFormError');
   const deleteModal = $('deleteModal'), deleteModalDesc = $('deleteModalDesc');
   const btnDelCancel = $('btnDelCancel'), btnDelConfirm = $('btnDelConfirm');
+  const grantsSection = $('grantsSection'), grantsList = $('grantsList'), btnAddGrant = $('btnAddGrant');
 
   async function apiCall(url, method = 'GET', body = null) {
     const opts = { method, headers: { 'Authorization': `Bearer ${token}` } };
@@ -58,6 +60,19 @@ document.addEventListener('DOMContentLoaded', () => {
     } catch (e) { toast(e.message || 'Failed to load users', 'error'); tableBody.innerHTML = ''; }
   }
 
+  async function fetchVmsForDropdown() {
+    try {
+      const vms = await apiCall('/api/vms');
+      azureVmsMap = {};
+      vms.forEach(vm => {
+        if (!azureVmsMap[vm.resource_group]) azureVmsMap[vm.resource_group] = [];
+        azureVmsMap[vm.resource_group].push(vm.name);
+      });
+    } catch (e) {
+      console.error('Failed to load VMs for dropdowns', e);
+    }
+  }
+
   function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
   function renderTable() {
@@ -97,12 +112,86 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   fActive.addEventListener('change', () => { activeText.textContent = fActive.checked ? 'Active' : 'Inactive'; });
+  
+  fRole.addEventListener('change', () => {
+    grantsSection.style.display = fRole.value === 'user' ? 'block' : 'none';
+  });
 
   function resetForm() {
     fUsername.value = ''; fEmail.value = ''; fRole.value = 'user';
     fPassword.value = ''; fActive.checked = true; activeText.textContent = 'Active';
     userFormError.textContent = '';
+    grantsList.innerHTML = '';
+    grantsSection.style.display = 'block';
   }
+
+  function addGrantRow(grant = null) {
+    const row = document.createElement('div');
+    row.className = 'grant-row';
+    const rg = grant ? grant.resource_group : '*';
+    const vm = grant ? grant.vm_name : '*';
+    const cStart = grant ? grant.can_start : true;
+    const cStop = grant ? grant.can_stop : true;
+    const cRestart = grant ? grant.can_restart : true;
+
+    // Generate RG Options
+    const rgs = Object.keys(azureVmsMap).sort();
+    let rgOptions = `<option value="*">All Resource Groups (*)</option>`;
+    rgs.forEach(g => {
+      rgOptions += `<option value="${esc(g)}" ${g===rg?'selected':''}>${esc(g)}</option>`;
+    });
+
+    row.innerHTML = `
+      <div class="grant-inputs">
+        <div class="pg-form-group" style="margin-bottom:0;">
+          <select class="pg-form-select rg-input">
+            ${rgOptions}
+          </select>
+        </div>
+        <div class="pg-form-group" style="margin-bottom:0;">
+          <div style="display:flex; gap: 8px;">
+            <select class="pg-form-select vm-input">
+              <option value="*">All VMs in group (*)</option>
+            </select>
+            <button class="btn-remove-grant" title="Remove grant">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="grant-actions">
+        <label class="grant-checkbox"><input type="checkbox" class="cb-start" ${cStart?'checked':''}> Start</label>
+        <label class="grant-checkbox"><input type="checkbox" class="cb-restart" ${cRestart?'checked':''}> Restart</label>
+        <label class="grant-checkbox"><input type="checkbox" class="cb-stop" ${cStop?'checked':''}> Stop</label>
+      </div>
+    `;
+
+    const rgSelect = row.querySelector('.rg-input');
+    const vmSelect = row.querySelector('.vm-input');
+
+    // Update VM dropdown when RG changes
+    function updateVmOptions() {
+      const selectedRg = rgSelect.value;
+      let vmOptions = `<option value="*">All VMs in group (*)</option>`;
+      if (selectedRg !== '*' && azureVmsMap[selectedRg]) {
+        azureVmsMap[selectedRg].sort().forEach(v => {
+          vmOptions += `<option value="${esc(v)}" ${v===vm?'selected':''}>${esc(v)}</option>`;
+        });
+      }
+      vmSelect.innerHTML = vmOptions;
+    }
+
+    rgSelect.addEventListener('change', updateVmOptions);
+    updateVmOptions(); // initialize
+
+    row.querySelector('.btn-remove-grant').addEventListener('click', () => row.remove());
+    grantsList.appendChild(row);
+  }
+
+  btnAddGrant.addEventListener('click', (e) => {
+    e.preventDefault();
+    addGrantRow();
+  });
 
   function openCreateModal() {
     editingId = null; resetForm();
@@ -110,6 +199,7 @@ document.addEventListener('DOMContentLoaded', () => {
     modalTitle.textContent = 'New user';
     btnUserSave.textContent = 'Create user';
     pwNote.textContent = '(required)';
+    addGrantRow();
     userModal.classList.add('open'); fUsername.focus();
   }
 
@@ -121,6 +211,14 @@ document.addEventListener('DOMContentLoaded', () => {
     modalTitle.textContent = 'Edit user';
     btnUserSave.textContent = 'Save changes';
     pwNote.textContent = '(leave blank to keep existing)';
+    
+    grantsSection.style.display = u.role === 'user' ? 'block' : 'none';
+    if (u.grants && u.grants.length > 0) {
+      u.grants.forEach(g => addGrantRow(g));
+    } else if (u.role === 'user') {
+      addGrantRow();
+    }
+
     userModal.classList.add('open'); fEmail.focus();
   }
 
@@ -148,10 +246,32 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!email) { userFormError.textContent = 'Email is required.'; return; }
     if (editingId === null && !pw) { userFormError.textContent = 'Password is required.'; return; }
     if (editingId === null && !fUsername.value.trim()) { userFormError.textContent = 'Username is required.'; return; }
+    
+    // Collect grants
+    let grants = [];
+    if (role === 'user') {
+      const rows = grantsList.querySelectorAll('.grant-row');
+      for (const row of rows) {
+        const rg = row.querySelector('.rg-input').value.trim();
+        const vm = row.querySelector('.vm-input').value.trim();
+        if (!rg) { userFormError.textContent = 'Resource group cannot be empty in grants.'; return; }
+        if (!vm) { userFormError.textContent = 'VM name cannot be empty in grants. Use * for all.'; return; }
+        grants.push({
+          resource_group: rg,
+          vm_name: vm,
+          can_start: row.querySelector('.cb-start').checked,
+          can_restart: row.querySelector('.cb-restart').checked,
+          can_stop: row.querySelector('.cb-stop').checked
+        });
+      }
+    }
+
     btnUserSave.disabled = true; btnUserSave.textContent = 'Saving…';
     try {
+      let savedUserId = editingId;
       if (editingId === null) {
-        await apiCall('/api/users', 'POST', { username: fUsername.value.trim(), email, role, is_active: isActive, password: pw });
+        const newUser = await apiCall('/api/users', 'POST', { username: fUsername.value.trim(), email, role, is_active: isActive, password: pw });
+        savedUserId = newUser.id;
         toast(`User "${fUsername.value.trim()}" created.`, 'success');
       } else {
         const payload = { email, role, is_active: isActive };
@@ -159,6 +279,12 @@ document.addEventListener('DOMContentLoaded', () => {
         await apiCall(`/api/users/${editingId}`, 'PUT', payload);
         toast('User updated.', 'success');
       }
+      
+      // Submit grants if role is operator
+      if (role === 'user' && savedUserId) {
+        await apiCall(`/api/users/${savedUserId}/access`, 'POST', grants);
+      }
+      
       closeUserModal(); await fetchUsers();
     } catch (e) { userFormError.textContent = e.message || 'Failed to save user.'; }
     finally { btnUserSave.disabled = false; btnUserSave.textContent = editingId === null ? 'Create user' : 'Save changes'; }
@@ -174,5 +300,5 @@ document.addEventListener('DOMContentLoaded', () => {
     finally { btnDelConfirm.disabled = false; btnDelConfirm.textContent = 'Delete'; }
   });
 
-  fetchProfile(); fetchUsers();
+  fetchProfile(); fetchUsers(); fetchVmsForDropdown();
 });

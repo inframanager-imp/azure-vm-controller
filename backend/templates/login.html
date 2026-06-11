@@ -4,70 +4,42 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Login · GYAN</title>
-  <!-- Google Fonts: IBM Plex Sans -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: oklch(0.175 0.005 248);
-      --surface: oklch(0.205 0.006 248);
-      --hover: oklch(0.232 0.007 248);
-      --border: oklch(1 0 0 / 0.085);
-      --border-strong: oklch(1 0 0 / 0.15);
-      --text: oklch(0.95 0.004 248);
-      --text-dim: oklch(0.72 0.008 248);
-      --text-muted: oklch(0.45 0.008 248);
-      --accent: oklch(0.72 0.085 162);
-      --accent-hover: oklch(0.76 0.090 162);
-      --accent-bg: oklch(0.72 0.085 162 / 0.15);
-      --red: oklch(0.66 0.14 25);
-    }
-    [data-theme="light"] {
-      --bg: #f4f6f8;
-      --surface: #ffffff;
-      --hover: #e8ebef;
-      --border: #dde1e6;
-      --border-strong: #c8cdd4;
-      --text: #1a1d23;
-      --text-dim: #5a6270;
-      --text-muted: #8a919c;
-      --accent: #1a8a7d;
-      --accent-hover: #15756a;
-      --accent-bg: rgba(26, 138, 125, 0.10);
-      --red: #dc2626;
+      --bg: #141619;
+      --surface: #1d2125;
+      --surface-hover: #23272c;
+      --border: #2a2e35;
+      --text: #ffffff;
+      --text-dim: #9ba1a8;
+      --text-muted: #6e7681;
+      --accent: #87cfa3;
+      --accent-hover: #75c594;
+      --red: #f85149;
+      --input-bg: #141619;
     }
     
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
     
     body {
       background-color: var(--bg);
       color: var(--text);
-      font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      font-size: 13px;
+      font-family: 'Inter', -apple-system, sans-serif;
+      font-size: 16px;
       line-height: 1.5;
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
       min-height: 100vh;
-      padding: 24px;
-    }
-    
-    .login-container {
-      width: 100%;
-      max-width: 380px;
-      background-color: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 8px;
       padding: 32px;
-      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
+      -webkit-font-smoothing: antialiased;
     }
     
-    .brand {
+    .brand-section {
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -75,19 +47,30 @@
     }
     
     .brand-logo {
-      width: 24px;
-      height: 24px;
-      border: 2px solid var(--accent);
-      border-radius: 6px;
-      margin-bottom: 12px;
+      width: 56px;
+      height: 56px;
+      background-color: var(--accent);
+      border-radius: 14px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 12px rgba(135, 207, 163, 0.15);
+    }
+    
+    .brand-logo-inner {
+      width: 20px;
+      height: 20px;
+      border: 4px solid var(--bg);
+      border-radius: 5px;
       position: relative;
     }
-    .brand-logo::after {
+    .brand-logo-inner::after {
       content: '';
       position: absolute;
-      width: 6px;
-      height: 6px;
-      background-color: var(--accent);
+      width: 5px;
+      height: 5px;
+      background-color: var(--bg);
       border-radius: 50%;
       top: 50%;
       left: 50%;
@@ -95,62 +78,163 @@
     }
     
     .brand-title {
-      font-size: 18px;
-      font-weight: 600;
-      letter-spacing: -0.2px;
+      font-size: 26px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
       color: var(--text);
+      margin-bottom: 6px;
+    }
+    
+    .brand-subtitle {
+      font-size: 15px;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+    
+    .login-container {
+      width: 100%;
+      max-width: 480px;
+      background-color: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 40px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    }
+    
+    .form-title {
+      font-size: 26px;
+      font-weight: 600;
+      margin-bottom: 32px;
+    }
+    
+    .error-banner {
+      background-color: rgba(248, 81, 73, 0.1);
+      border: 1px solid rgba(248, 81, 73, 0.4);
+      color: var(--red);
+      padding: 14px 16px;
+      border-radius: 8px;
+      font-size: 15px;
+      margin-bottom: 28px;
+      display: none;
+      align-items: center;
+      gap: 12px;
     }
     
     .form-group {
-      margin-bottom: 20px;
+      margin-bottom: 24px;
       position: relative;
     }
     
     .form-label {
       display: block;
-      font-size: 11px;
-      font-weight: 500;
+      font-size: 13px;
+      font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 0.5px;
-      color: var(--text-dim);
-      margin-bottom: 6px;
+      color: var(--text-muted);
+      margin-bottom: 10px;
     }
     
     .form-input {
       width: 100%;
-      background-color: var(--hover);
+      background-color: var(--input-bg);
       border: 1px solid var(--border);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 10px 12px;
+      border-radius: 8px;
+      padding: 14px 16px;
       color: var(--text);
       font-family: inherit;
-      font-size: 13px;
-      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+      font-size: 16px;
+      transition: all 0.2s ease;
       outline: none;
     }
     
     .form-input:focus {
       border-color: var(--accent);
-      box-shadow: 0 0 0 2px var(--accent-bg);
+      box-shadow: 0 0 0 1px var(--accent);
+    }
+    
+    .form-input::placeholder {
+      color: var(--border);
+    }
+    
+    .password-wrapper {
+      position: relative;
+    }
+    
+    .btn-toggle-pwd {
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 6px;
+    }
+    .btn-toggle-pwd:hover {
+      color: var(--text-dim);
+    }
+    
+    .remember-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 32px;
+      cursor: pointer;
+    }
+    
+    .custom-checkbox {
+      appearance: none;
+      width: 22px;
+      height: 22px;
+      background-color: var(--input-bg);
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      cursor: pointer;
+      position: relative;
+      transition: all 0.2s ease;
+    }
+    .custom-checkbox:checked {
+      background-color: var(--accent);
+      border-color: var(--accent);
+    }
+    .custom-checkbox:checked::after {
+      content: '';
+      position: absolute;
+      left: 6px;
+      top: 2px;
+      width: 6px;
+      height: 11px;
+      border: solid var(--bg);
+      border-width: 0 2px 2px 0;
+      transform: rotate(45deg);
+    }
+    
+    .remember-label {
+      font-size: 15px;
+      color: var(--text-dim);
     }
     
     .btn-submit {
       width: 100%;
       background-color: var(--accent);
-      border: 1px solid transparent;
-      border-radius: 6px;
-      padding: 10px 16px;
-      color: oklch(0.15 0.005 248);
+      border: none;
+      border-radius: 8px;
+      padding: 16px 20px;
+      color: var(--bg);
       font-family: inherit;
-      font-size: 13px;
+      font-size: 16px;
       font-weight: 600;
       cursor: pointer;
-      transition: background-color 0.15s ease;
+      transition: background-color 0.2s ease;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
+      gap: 10px;
     }
     
     .btn-submit:hover {
@@ -158,29 +242,15 @@
     }
     
     .btn-submit:disabled {
-      opacity: 0.5;
+      opacity: 0.7;
       cursor: not-allowed;
     }
     
-    .error-banner {
-      background-color: oklch(0.25 0.08 25 / 0.15);
-      border: 1px solid oklch(0.66 0.14 25 / 0.3);
-      color: var(--red);
-      padding: 10px 12px;
-      border-radius: 6px;
-      font-size: 12px;
-      margin-bottom: 20px;
-      display: none;
-      align-items: center;
-      gap: 8px;
-    }
-    
-    /* Simple spinner */
     .spinner {
-      width: 14px;
-      height: 14px;
-      border: 2px solid oklch(0.15 0.005 248 / 0.3);
-      border-top-color: oklch(0.15 0.005 248);
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(20, 22, 25, 0.3);
+      border-top-color: var(--bg);
       border-radius: 50%;
       animation: spin 0.6s linear infinite;
       display: none;
@@ -190,30 +260,43 @@
       to { transform: rotate(360deg); }
     }
   </style>
-  <script>document.documentElement.setAttribute('data-theme', localStorage.getItem('gyan-theme') || 'dark');</script>
 </head>
 <body>
+
+  <div class="brand-section">
+    <div class="brand-logo"><div class="brand-logo-inner"></div></div>
+    <div class="brand-title">GYAN</div>
+    <div class="brand-subtitle">Azure VM management console</div>
+  </div>
+
   <div class="login-container">
-    <div class="brand">
-      <div class="brand-logo"></div>
-      <div class="brand-title">GYAN Console</div>
-    </div>
+    <h2 class="form-title">Sign in</h2>
     
     <div class="error-banner" id="errorBanner">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
       <span id="errorMessage">Invalid credentials</span>
     </div>
     
     <form id="loginForm">
       <div class="form-group">
         <label for="username" class="form-label">Username</label>
-        <input type="text" id="username" class="form-input" required autocomplete="username" placeholder="e.g. admin">
+        <input type="text" id="username" class="form-input" required autocomplete="username" placeholder="admin">
       </div>
       
       <div class="form-group">
         <label for="password" class="form-label">Password</label>
-        <input type="password" id="password" class="form-input" required autocomplete="current-password" placeholder="••••••••">
+        <div class="password-wrapper">
+          <input type="password" id="password" class="form-input" required autocomplete="current-password" placeholder="••••••••">
+          <button type="button" class="btn-toggle-pwd" id="btnTogglePwd">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+          </button>
+        </div>
       </div>
+      
+      <label class="remember-group">
+        <input type="checkbox" class="custom-checkbox" id="rememberMe" checked>
+        <span class="remember-label">Remember me</span>
+      </label>
       
       <button type="submit" class="btn-submit" id="btnSubmit">
         <span class="spinner" id="spinner"></span>
@@ -223,5 +306,15 @@
   </div>
 
   <script src="/static/js/login.js"></script>
+  <script>
+    document.getElementById('btnTogglePwd').addEventListener('click', function() {
+      const pwdInput = document.getElementById('password');
+      if (pwdInput.type === 'password') {
+        pwdInput.type = 'text';
+      } else {
+        pwdInput.type = 'password';
+      }
+    });
+  </script>
 </body>
 </html>

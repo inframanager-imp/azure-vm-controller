@@ -7,8 +7,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/static/css/vms.css">
-  <link rel="stylesheet" href="/static/css/pages.css">
+  <link rel="stylesheet" href="/static/css/vms.css?v=2">
+  <link rel="stylesheet" href="/static/css/pages.css?v=2">
   <script>document.documentElement.setAttribute('data-theme', localStorage.getItem('gyan-theme') || 'dark');</script>
 </head>
 <body>
@@ -116,7 +116,21 @@
           </label>
         </div>
       </div>
-      <p class="pg-form-error" id="userFormError"></p>
+      
+      <!-- VM Access Grants Section -->
+      <div id="grantsSection" style="display:none; margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--border);">
+        <h3 class="pg-form-label" style="font-size: 14px; margin-bottom: 4px; color: var(--text);">VM Access Grants</h3>
+        <p style="font-size: 12px; color: var(--text-2); margin-bottom: 16px;">Specify which VMs this operator can access. Use <code style="background:var(--surface-2);padding:2px 4px;border-radius:4px;color:var(--text);">*</code> for all VMs in a resource group.</p>
+        
+        <div id="grantsList" style="display:flex; flex-direction: column; gap: 12px;"></div>
+        
+        <button class="btn-ghost" id="btnAddGrant" style="margin-top: 12px; padding: 6px 12px; font-size: 13px;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14" style="margin-right: 6px;"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Add rule
+        </button>
+      </div>
+
+      <p class="pg-form-error" id="userFormError" style="margin-top: 16px;"></p>
     </div>
     <div class="modal-footer">
       <button class="btn-ghost" id="btnUserCancel">Cancel</button>
@@ -140,7 +154,7 @@
 </div>
 
 <div class="toast-container" id="toastContainer" aria-live="assertive"></div>
-<script src="/static/js/users.js"></script>
-<script src="/static/js/theme.js"></script>
+<script src="/static/js/users.js?v=3"></script>
+<script src="/static/js/theme.js?v=2"></script>
 </body>
 </html>

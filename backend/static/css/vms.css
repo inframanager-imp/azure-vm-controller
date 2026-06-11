@@ -1559,3 +1559,57 @@ select:focus-visible {
 [data-theme="light"] .sort-indicator {
   color: rgba(255, 255, 255, 0.50);
 }
+
+/* VM Grants UI */
+.grant-row {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 12px;
+  background-color: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  position: relative;
+}
+.grant-row-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.grant-inputs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.grant-actions {
+  display: flex;
+  gap: 16px;
+  padding-top: 8px;
+  border-top: 1px dashed var(--border);
+}
+.grant-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--text-2);
+  cursor: pointer;
+}
+.grant-checkbox input {
+  accent-color: var(--teal);
+}
+.btn-remove-grant {
+  background: transparent;
+  border: none;
+  color: var(--text-4);
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.btn-remove-grant:hover {
+  color: #ef4444;
+  background: rgba(239, 68, 68, 0.1);
+}
